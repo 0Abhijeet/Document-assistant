@@ -5,6 +5,7 @@ os.environ.setdefault("GROQ_API_KEY", "test-key-not-used")
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import text
 
 from src.database import Base, engine, SessionLocal
 from src.models import Document, Chunk, QueryLog
@@ -16,6 +17,9 @@ from src.app import app
 @pytest.fixture(autouse=True)
 def clean_db():
     """Fresh schema per test — keeps tests independent of each other and of run order."""
+    with engine.connect() as conn:
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        conn.commit()
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     yield
