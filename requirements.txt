@@ -5,7 +5,7 @@ python-dotenv
 langchain-community
 langchain-text-splitters
 pypdf
-sentence-transformers
+
 
 sqlalchemy
 psycopg2-binary
