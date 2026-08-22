@@ -1,9 +1,26 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from fastembed import TextEmbedding
 
 from src.database import SessionLocal
 from src.models import Document, Chunk
+
+
+class _FastEmbedWrapper:
+    """Wraps fastembed to match the .embed_documents()/.embed_query() interface
+    the rest of this codebase expects — keeps ingest.py/retrieve.py unchanged."""
+
+    def __init__(self):
+        # BAAI/bge-small-en-v1.5 outputs 384-dim vectors — matches EMBEDDING_DIM
+        # in models.py exactly, so no schema migration needed for this swap.
+        self._model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
+
+    def embed_documents(self, texts):
+        return [vec.tolist() for vec in self._model.embed(texts)]
+
+    def embed_query(self, text):
+        return next(iter(self._model.embed([text]))).tolist()
+
 
 _embeddings = None
 
@@ -12,9 +29,7 @@ def get_embeddings():
     """Lazy singleton — loading the model is expensive, don't reload it per call."""
     global _embeddings
     if _embeddings is None:
-        _embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
+        _embeddings = _FastEmbedWrapper()
     return _embeddings
 
 
