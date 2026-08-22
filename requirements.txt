@@ -13,7 +13,7 @@ pgvector
 alembic
 
 groq
-
+fastembed
 pytest
 pytest-asyncio
 httpx
