@@ -1,64 +1,62 @@
 # RAG Document Assistant
 
-FastAPI + pgvector RAG pipeline. Upload PDFs, ask questions, get streamed answers grounded in the uploaded documents.
+A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions, get streamed answers grounded in the document's actual content.
 
-## What changed from the prototype, and why
+**🔗 Live demo:** https://document-assistant-okwx.onrender.com
+*(First request may take 30-60s to wake up — free-tier hosting spins down when idle.)*
 
-| Before | After | Why |
-|---|---|---|
-| FAISS index on local disk, wiped on every upload | Postgres + pgvector, additive | Local disk doesn't survive a redeploy; wiping meant only one document could exist at a time |
-| Ollama (local model) | Groq API | Cloud Run/Render can't host a local LLM; Groq has a genuine free tier, no card required |
-| `async def` routes calling blocking code directly | `def` routes | FastAPI runs sync `def` routes in a thread pool automatically — blocking embedding/DB calls no longer freeze the event loop for every other request |
-| Raw `file.filename` used in the save path | Sanitized + UUID-prefixed filename | Prevents path traversal via a crafted filename |
-| No tests | pytest against a real Postgres+pgvector instance | Proves the actual schema/queries work, not just business logic in isolation |
+## What this demonstrates
+
+- Designed and built a RAG pipeline end-to-end: ingestion, chunking, embedding, vector retrieval, and LLM generation
+- Replaced a local-disk vector store with **Postgres + pgvector**, enabling persistent, multi-document storage
+- Fixed a real concurrency bug — blocking I/O inside async routes — and can explain why it mattered
+- Diagnosed and fixed a production memory-limit crash by swapping a torch-based embedding library for a lightweight ONNX-based one, with zero change to the database schema
+- Wrote a test suite that runs against a real Postgres instance (not mocked), covering ingestion, retrieval, and API endpoints
+- Set up CI (GitHub Actions) that spins up a fresh database and runs the full suite on every push
+- Deployed to production (Render + Neon), debugging real infrastructure issues along the way: stale local environments, deprecated model names, environment variable scoping, and out-of-memory crash loops
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| API | FastAPI |
+| Vector storage | PostgreSQL + pgvector (via Neon) |
+| Embeddings | fastembed (BAAI/bge-small-en-v1.5, ONNX runtime — no torch dependency) |
+| LLM | Groq (Llama-based, streamed responses) |
+| ORM / migrations | SQLAlchemy + Alembic |
+| Testing | pytest, run against a real Postgres instance |
+| CI/CD | GitHub Actions |
+| Deployment | Docker → Render |
+
+## Architecture decisions (and why)
+
+| Decision | Reasoning |
+|---|---|
+| Postgres + pgvector over FAISS | FAISS's local index doesn't survive a redeploy; Postgres gives persistent, queryable, multi-document storage in the same database as the app's metadata |
+| Groq over local Ollama | Cloud hosting can't run a local LLM process; Groq's API has a genuine no-card free tier and keeps the app fully stateless |
+| Sync (`def`) FastAPI routes, not `async def` | The embedding and DB calls in this app are blocking; wrapping them in `async def` would freeze the event loop for every concurrent request. FastAPI runs sync routes in a thread pool automatically — a small but important correctness fix |
+| fastembed over sentence-transformers | sentence-transformers pulls in torch, which alone can exceed a 512MB hosting limit; fastembed uses ONNX runtime and produces the same 384-dim vectors with a fraction of the memory footprint |
+| Tests run against real Postgres, not SQLite | pgvector's vector type has no SQLite equivalent — testing against the real database catches schema and query bugs mocks would hide |
+
+## Known limitations
+
+Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
+
+- Thread-pool concurrency, not true async — fine for demo traffic, not production scale
+- No auth on the upload endpoint — anyone with the URL can add documents
+- CI runs tests on push; deployment is manual, not yet automated
+- Embedding model reloads on cold start (free-tier hosting spins down when idle)
+- ivfflat index tuning (`lists = 100`) is a reasonable default, not benchmarked against real data volume
 
 ## Local development
 
 ```bash
-cp .env.example .env
-# edit .env: add your GROQ_API_KEY (free at console.groq.com, no card)
-
+cp .env.example .env   # add your own GROQ_API_KEY and DATABASE_URL
 docker compose up --build
-```
-
-App: http://localhost:8000
-First run applies no migrations automatically — run once:
-
-```bash
 docker compose exec app alembic upgrade head
 ```
 
-## Running tests
-
+Run tests:
 ```bash
 docker compose exec app pytest -v
 ```
-
-Tests use a fake embedding model (see `tests/conftest.py`) so CI doesn't need to download the real HuggingFace model or hit a live API — only the DB/pipeline logic is under test.
-
-## Deploying by Monday (no GCP)
-
-**Database — Neon (free, permanent, pgvector built in):**
-1. Sign up at neon.tech, create a project.
-2. Copy the connection string, enable pgvector: run `CREATE EXTENSION IF NOT EXISTS vector;` in Neon's SQL editor (Alembic's migration also does this, redundant is fine).
-3. Set `DATABASE_URL` to the Neon string.
-
-**Run migrations against Neon:**
-```bash
-DATABASE_URL="<your neon url>" alembic upgrade head
-```
-
-**App hosting — Render or Railway (free tier, git-push deploy):**
-1. Push this repo to GitHub.
-2. New Web Service → connect repo → it detects the Dockerfile.
-3. Set environment variables: `DATABASE_URL` (Neon string), `GROQ_API_KEY`.
-4. Deploy. First cold start will be slow (~30-60s) — the embedding model downloads on first use.
-
-**CI:** GitHub Actions runs pytest against a throwaway Postgres+pgvector container on every push. It does not auto-deploy — deploy manually via Render/Railway's dashboard or CLI until you add that as a deliberate next step. Don't claim auto-deploy on your resume; you didn't build it yet.
-
-## Known limitations (say these out loud in an interview, don't get caught not knowing them)
-
-- Thread-pool concurrency, not true async — fine for demo traffic, not for production scale.
-- Embedding model reloads on cold start (Render free tier spins down after inactivity).
-- No auth on `/upload` — anyone with the URL can add documents. Fine for a portfolio demo, not for anything real.
-- ivfflat index tuning (`lists = 100`) is a reasonable default, not benchmarked against your actual data volume.
