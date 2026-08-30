@@ -1,12 +1,8 @@
 # RAG Document Assistant
-
 A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions, get streamed answers grounded in the document's actual content.
-
 **🔗 Live demo:** https://document-assistant-okwx.onrender.com
 *(First request may take 30-60s to wake up — free-tier hosting spins down when idle.)*
-
 ## What this demonstrates
-
 - Designed and built a RAG pipeline end-to-end: ingestion, chunking, embedding, vector retrieval, and LLM generation
 - Replaced a local-disk vector store with **Postgres + pgvector**, enabling persistent, multi-document storage
 - Fixed a real concurrency bug — blocking I/O inside async routes — and can explain why it mattered
@@ -14,22 +10,19 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Wrote a test suite that runs against a real Postgres instance (not mocked), covering ingestion, retrieval, and API endpoints
 - Set up CI (GitHub Actions) that spins up a fresh database and runs the full suite on every push
 - Deployed to production (Render + Neon), debugging real infrastructure issues along the way: stale local environments, deprecated model names, environment variable scoping, and out-of-memory crash loops
-
+- Separately deployed the same application to **AWS (EC2 + RDS)** to gain hands-on cloud infrastructure experience — VPC networking, IAM, security groups, and cross-provider database migration (see AWS deployment section below)
 ## Tech stack
-
 | Layer | Technology |
 |---|---|
 | API | FastAPI |
-| Vector storage | PostgreSQL + pgvector (via Neon) |
+| Vector storage | PostgreSQL + pgvector (via Neon; also deployed on AWS RDS — see below) |
 | Embeddings | fastembed (BAAI/bge-small-en-v1.5, ONNX runtime — no torch dependency) |
 | LLM | Groq (Llama-based, streamed responses) |
 | ORM / migrations | SQLAlchemy + Alembic |
 | Testing | pytest, run against a real Postgres instance |
 | CI/CD | GitHub Actions |
-| Deployment | Docker → Render |
-
+| Deployment | Docker → Render (production); Docker → AWS EC2 + RDS (infrastructure exercise) |
 ## Architecture decisions (and why)
-
 | Decision | Reasoning |
 |---|---|
 | Postgres + pgvector over FAISS | FAISS's local index doesn't survive a redeploy; Postgres gives persistent, queryable, multi-document storage in the same database as the app's metadata |
@@ -37,26 +30,48 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | Sync (`def`) FastAPI routes, not `async def` | The embedding and DB calls in this app are blocking; wrapping them in `async def` would freeze the event loop for every concurrent request. FastAPI runs sync routes in a thread pool automatically — a small but important correctness fix |
 | fastembed over sentence-transformers | sentence-transformers pulls in torch, which alone can exceed a 512MB hosting limit; fastembed uses ONNX runtime and produces the same 384-dim vectors with a fraction of the memory footprint |
 | Tests run against real Postgres, not SQLite | pgvector's vector type has no SQLite equivalent — testing against the real database catches schema and query bugs mocks would hide |
-
+| RDS security group referenced by ID, not IP | EC2's traffic to RDS originates from its security group identity inside the VPC, not from any external IP — an IP-based rule can never match it regardless of which IP is used |
 ## Known limitations
-
 Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
-
 - Thread-pool concurrency, not true async — fine for demo traffic, not production scale
 - No auth on the upload endpoint — anyone with the URL can add documents
 - CI runs tests on push; deployment is manual, not yet automated
 - Embedding model reloads on cold start (free-tier hosting spins down when idle)
 - ivfflat index tuning (`lists = 100`) is a reasonable default, not benchmarked against real data volume
-
 ## Local development
-
 ```bash
 cp .env.example .env   # add your own GROQ_API_KEY and DATABASE_URL
 docker compose up --build
 docker compose exec app alembic upgrade head
 ```
-
 Run tests:
 ```bash
 docker compose exec app pytest -v
 ```
+
+---
+
+## AWS deployment (infrastructure exercise)
+
+The live demo above (Render + Neon) is the permanent, always-on version of this project. Separately, I deployed the same application to **AWS EC2 + RDS** — not as a second production environment, but specifically to build and demonstrate hands-on experience with core AWS services (EC2, RDS, IAM, VPC/security groups).
+
+**Decision:** migrated the database to RDS specifically, rather than keeping Neon and only using EC2 — RDS is explicitly named in target job descriptions, and the VPC/security-group work involved is the transferable skill, not just a keyword match.
+
+### Architecture
+- **EC2** (`t2.micro`, Ubuntu 22.04) — app running in Docker, `restart: unless-stopped`, verified to survive a real instance reboot with no manual intervention
+- **RDS PostgreSQL** (`db.t3.micro`, PG 16.x) — pgvector-enabled, migrated from Neon via `pg_dump`/`pg_restore`
+- **Networking** — RDS has no public access; its only inbound rule references the EC2 security group directly (SG-to-SG), not an IP range, so only the app server can reach the database
+- **Elastic IP** — keeps the demo URL stable across EC2 stop/start cycles
+- **IAM** — dedicated console-access user, MFA on root, cost budget with alert threshold configured
+
+### Skills demonstrated
+- EC2 provisioning: AMI selection, security groups, both key-based and browser-based (EC2 Instance Connect) access
+- RDS provisioning: engine/version selection for extension compatibility, instance-class/storage sizing within free tier
+- VPC networking: security-group-to-security-group referencing as the correct pattern for private service-to-service access, vs. IP allowlisting
+- IAM fundamentals: least-privilege console access, separating root from daily use
+- Docker deployment on a persistent host (vs. Render's managed platform): env var handling via `.env` (`chmod 600`, not committed), restart policies, and verifying container identity against the actual backend rather than trusting "container running" as proof
+- Cross-provider data migration: `pg_dump`/`pg_restore` between managed Postgres providers, including `--no-owner`/`--no-privileges` role handling
+
+### AWS deployment (infrastructure exercise)
+
+Same app deployed separately to AWS EC2 + RDS to build hands-on cloud infrastructure experience (VPC networking, IAM, security groups, cross-provider DB migration). Full write-up, architecture, and debugging log: [`docs/PROJECT_DETAILS.md`]
