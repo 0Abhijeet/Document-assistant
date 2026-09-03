@@ -6,21 +6,22 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Designed and built a RAG pipeline end-to-end: ingestion, chunking, embedding, vector retrieval, and LLM generation
 - Replaced a local-disk vector store with **Postgres + pgvector**, enabling persistent, multi-document storage
 - Fixed a real concurrency bug — blocking I/O inside async routes — and can explain why it mattered
+- Converted the pipeline to fully async (SQLAlchemy/asyncpg, async Groq client), including diagnosing and fixing a real event-loop-blocking regression risk and a testing-framework/event-loop incompatibility along the way
 - Diagnosed and fixed a production memory-limit crash by swapping a torch-based embedding library for a lightweight ONNX-based one, with zero change to the database schema
 - Wrote a test suite that runs against a real Postgres instance (not mocked), covering ingestion, retrieval, and API endpoints
 - Set up CI (GitHub Actions) that spins up a fresh database and runs the full suite on every push
 - Deployed to production (Render + Neon), debugging real infrastructure issues along the way: stale local environments, deprecated model names, environment variable scoping, and out-of-memory crash loops
 - Separately deployed the same application to **AWS (EC2 + RDS)** to gain hands-on cloud infrastructure experience — VPC networking, IAM, security groups, and cross-provider database migration (see AWS deployment section below)
-- Wrapped the RAG pipeline's retrieval as an MCP (Model Context Protocol) tool — `search_documents`, with top-k and per-document filtering — verified against a live production database via the MCP Inspector
+- Wrapped the RAG pipeline's retrieval as an MCP (Model Context Protocol) tool — `search_documents`, with top-k and per-document filtering — verified against a live production database via the MCP Inspector and Claude Desktop
 ## Tech stack
 | Layer | Technology |
 |---|---|
-| API | FastAPI |
+| API | FastAPI (async) |
 | Vector storage | PostgreSQL + pgvector (via Neon; also deployed on AWS RDS — see below) |
 | Embeddings | fastembed (BAAI/bge-small-en-v1.5, ONNX runtime — no torch dependency) |
-| LLM | Groq (Llama-based, streamed responses) |
-| ORM / migrations | SQLAlchemy + Alembic |
-| Testing | pytest, run against a real Postgres instance |
+| LLM | Groq (Llama-based, async client, streamed responses) |
+| ORM / migrations | SQLAlchemy 2.0 (async) + asyncpg; Alembic (sync, unaffected) |
+| Testing | pytest, pytest-asyncio, run against a real Postgres instance |
 | CI/CD | GitHub Actions |
 | Deployment | Docker → Render (production); Docker → AWS EC2 + RDS (infrastructure exercise) |
 | Agent tooling | Model Context Protocol (MCP) — stdio transport, official `mcp` SDK |
@@ -36,7 +37,6 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | Separate `mcp_server.py`, not a route on the existing app | Keeps the MCP tool decoupled from the FastAPI app's lifecycle and imports the existing service layer (`src.retrieve`) directly — no duplication, no changes to existing routes |
 ## Known limitations
 Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
-- Converted the pipeline to fully async (SQLAlchemy/asyncpg, async Groq client), including diagnosing and fixing a real event-loop-blocking regression risk and a testing-framework/event-loop incompatibility along the way
 - No auth on the upload endpoint — anyone with the URL can add documents
 - CI runs tests on push; deployment is manual, not yet automated
 - Embedding model reloads on cold start (free-tier hosting spins down when idle)
