@@ -12,15 +12,15 @@ class FakeEmbeddings:
 
     @staticmethod
     def _fake_vector(text):
-        # Deterministic 384-dim vector derived from text length/hash — good enough
-        # to prove the pipeline plumbing works without needing real semantic similarity.
         seed = sum(ord(c) for c in text) % 1000
         return [((seed + i) % 100) / 100.0 for i in range(384)]
 
 
 @pytest.fixture(autouse=True)
 def fake_embeddings(monkeypatch):
-    """Applied to every test — replaces the real embedding model with the fake one."""
+    """Applied to every test — replaces the real embedding model with the fake one.
+    Unchanged from the sync version: monkeypatching a plain attribute needs no
+    async handling regardless of what the code underneath is."""
     from src import ingest
 
     fake = FakeEmbeddings()

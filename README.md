@@ -27,13 +27,13 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 |---|---|
 | Postgres + pgvector over FAISS | FAISS's local index doesn't survive a redeploy; Postgres gives persistent, queryable, multi-document storage in the same database as the app's metadata |
 | Groq over local Ollama | Cloud hosting can't run a local LLM process; Groq's API has a genuine no-card free tier and keeps the app fully stateless |
-| Sync (`def`) FastAPI routes, not `async def` | The embedding and DB calls in this app are blocking; wrapping them in `async def` would freeze the event loop for every concurrent request. FastAPI runs sync routes in a thread pool automatically — a small but important correctness fix |
+| Fully async (`async def` routes, asyncpg, AsyncGroq) | Async SQLAlchemy/asyncpg and an async LLM client are explicitly named in target JDs. CPU-bound calls with no async equivalent (fastembed, PDF parsing) are offloaded via `asyncio.to_thread` — naively awaiting them inline would reintroduce the exact event-loop-blocking bug this project already fixed once (see PROJECT_DETAILS.md §10) |
 | fastembed over sentence-transformers | sentence-transformers pulls in torch, which alone can exceed a 512MB hosting limit; fastembed uses ONNX runtime and produces the same 384-dim vectors with a fraction of the memory footprint |
 | Tests run against real Postgres, not SQLite | pgvector's vector type has no SQLite equivalent — testing against the real database catches schema and query bugs mocks would hide |
 | RDS security group referenced by ID, not IP | EC2's traffic to RDS originates from its security group identity inside the VPC, not from any external IP — an IP-based rule can never match it regardless of which IP is used |
 ## Known limitations
 Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
-- Thread-pool concurrency, not true async — fine for demo traffic, not production scale
+- Converted the pipeline to fully async (SQLAlchemy/asyncpg, async Groq client), including diagnosing and fixing a real event-loop-blocking regression risk and a testing-framework/event-loop incompatibility along the way
 - No auth on the upload endpoint — anyone with the URL can add documents
 - CI runs tests on push; deployment is manual, not yet automated
 - Embedding model reloads on cold start (free-tier hosting spins down when idle)

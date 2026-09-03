@@ -1,10 +1,11 @@
 import os
 import re
+import shutil
 import uuid
+import asyncio
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import HTMLResponse, StreamingResponse
-import shutil
 
 from src.ingest import ingest_documents
 from src.generate import stream_answer
@@ -19,6 +20,13 @@ def secure_filename(filename: str) -> str:
     filename = os.path.basename(filename)
     filename = re.sub(r"[^A-Za-z0-9._-]", "_", filename)
     return filename or "upload.pdf"
+
+
+def _save_upload_sync(file_obj, file_path: str) -> None:
+    """Blocking disk write, isolated into its own function so it can be
+    offloaded with asyncio.to_thread from the async route below."""
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file_obj, buffer)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -225,16 +233,14 @@ def home():
     """
 
 
-# NOTE: these are `def`, not `async def`, on purpose. Every step inside them
-# (embedding, disk I/O, DB calls) is blocking, synchronous code. An `async def`
-# route running blocking code freezes the entire event loop for every other
-# request in flight. FastAPI automatically runs plain `def` routes in a worker
-# thread pool, so blocking code here no longer blocks the server.
-# Tradeoff: the thread pool has a fixed size, so this doesn't scale to heavy
-# concurrent load — fine for a demo/portfolio app, not for production traffic.
+# These are now `async def`. Every blocking step inside (disk I/O, PDF
+# parsing, embedding inference, DB calls, the Groq call) has been converted
+# to either a genuinely async call (asyncpg, AsyncGroq) or explicitly
+# offloaded to a thread (asyncio.to_thread) further down the call chain in
+# ingest.py / retrieve.py / generate.py. Nothing here blocks the event loop.
 
 @app.post("/upload")
-def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
@@ -244,11 +250,10 @@ def upload_file(file: UploadFile = File(...)):
     unique_name = f"{uuid.uuid4().hex}_{safe_name}"
     file_path = f"data/docs/{unique_name}"
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    await asyncio.to_thread(_save_upload_sync, file.file, file_path)
 
     try:
-        doc_id = ingest_documents(file_path, safe_name)
+        doc_id = await ingest_documents(file_path, safe_name)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process document: {e}")
 
@@ -256,7 +261,7 @@ def upload_file(file: UploadFile = File(...)):
 
 
 @app.post("/stream")
-def stream_endpoint(question: str = Form(...)):
+async def stream_endpoint(question: str = Form(...)):
     if not question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
     generator = stream_answer(question)
