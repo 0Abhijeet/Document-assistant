@@ -21,3 +21,4 @@ reportlab
 asyncpg
 pytest-asyncio
 httpx
+mcp

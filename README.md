@@ -11,6 +11,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Set up CI (GitHub Actions) that spins up a fresh database and runs the full suite on every push
 - Deployed to production (Render + Neon), debugging real infrastructure issues along the way: stale local environments, deprecated model names, environment variable scoping, and out-of-memory crash loops
 - Separately deployed the same application to **AWS (EC2 + RDS)** to gain hands-on cloud infrastructure experience — VPC networking, IAM, security groups, and cross-provider database migration (see AWS deployment section below)
+- Wrapped the RAG pipeline's retrieval as an MCP (Model Context Protocol) tool — `search_documents`, with top-k and per-document filtering — verified against a live production database via the MCP Inspector
 ## Tech stack
 | Layer | Technology |
 |---|---|
@@ -22,6 +23,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | Testing | pytest, run against a real Postgres instance |
 | CI/CD | GitHub Actions |
 | Deployment | Docker → Render (production); Docker → AWS EC2 + RDS (infrastructure exercise) |
+| Agent tooling | Model Context Protocol (MCP) — stdio transport, official `mcp` SDK |
 ## Architecture decisions (and why)
 | Decision | Reasoning |
 |---|---|
@@ -31,6 +33,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | fastembed over sentence-transformers | sentence-transformers pulls in torch, which alone can exceed a 512MB hosting limit; fastembed uses ONNX runtime and produces the same 384-dim vectors with a fraction of the memory footprint |
 | Tests run against real Postgres, not SQLite | pgvector's vector type has no SQLite equivalent — testing against the real database catches schema and query bugs mocks would hide |
 | RDS security group referenced by ID, not IP | EC2's traffic to RDS originates from its security group identity inside the VPC, not from any external IP — an IP-based rule can never match it regardless of which IP is used |
+| Separate `mcp_server.py`, not a route on the existing app | Keeps the MCP tool decoupled from the FastAPI app's lifecycle and imports the existing service layer (`src.retrieve`) directly — no duplication, no changes to existing routes |
 ## Known limitations
 Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
 - Converted the pipeline to fully async (SQLAlchemy/asyncpg, async Groq client), including diagnosing and fixing a real event-loop-blocking regression risk and a testing-framework/event-loop incompatibility along the way

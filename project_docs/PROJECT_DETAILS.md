@@ -242,3 +242,26 @@ Neon's connection string uses libpq-only query parameters (`sslmode`, `channel_b
 
 ### Residual, honest limitation
 `asyncio.to_thread` is still used for `fastembed` inference and PDF parsing/splitting — these have no true async-native implementation in their respective libraries. This isn't a gap in the conversion; it's the correct pattern for offloading CPU-bound work under `asyncio`, and is worth being able to explain as such rather than presenting the whole pipeline as "100% async" without qualification.
+
+## 11. MCP tool integration (September 2026)
+
+### Decision
+Wrapped the existing pgvector retrieval service as a single MCP tool — `search_documents(query, top_k=5, doc_id=None)` — in a standalone `mcp_server.py` at the repo root, importing `src.retrieve` directly rather than duplicating any retrieval logic. No existing FastAPI route was touched; the MCP tool and the web app are two independent entry points into the same service layer.
+
+Used the current `mcp` SDK (`MCPServer`, v2.x) rather than pinning `mcp<2` to keep the more commonly-referenced `FastMCP` class name from v1. The actual usage pattern — decorator-based tool registration, `.run(transport="stdio")` — is identical between versions; only internal naming changed. Chose to build on the actively-maintained version rather than a deprecated one for name-familiarity.
+
+### Retrieval enrichment for the MCP response
+The tool's stated return type (`list[Chunk]`) needed more than the retrieval function originally returned. Extended `retrieve_relevant_chunks` with:
+- an optional `doc_id` parameter, added as a `WHERE` clause on the existing query
+- a join against `Document` to include `filename` per chunk
+- the actual cosine-distance value, previously used only for `ORDER BY` and never returned, now selected explicitly and converted to a 0-1 `similarity` score (`1 - distance`)
+
+This is backward-compatible: `generate.py`'s existing call site (`await retrieve_relevant_chunks(question)`) is unaffected, since `k` and `doc_id` both keep their previous defaults and it only reads the `content` field.
+
+### Real bugs found and fixed (verified, not assumed)
+1. **Test-vector design bug, not an app bug.** An early verification test used constant-valued vectors (e.g., `[0.9]*384` vs `[0.01]*384`) to simulate a "near" and "far" match. Both returned identical (maximal) similarity — because any two vectors where every component is the same constant are scalar multiples of each other, i.e. they point in the exact same direction, so cosine distance between them is always zero regardless of magnitude. Fixed by using vectors with genuinely different component patterns (varying by index, not just scale). Worth remembering as a general gotcha when hand-constructing test embeddings, not specific to this project.
+2. **Three SDK API-surface mismatches**, all found by testing against the real `MCPServer` object instead of assuming its shape: an internal attribute referenced by an old name (`_mcp_server`, actually `_lowlevel_server` in this version); `list_tools()` being genuinely `async` despite a type hint that read as synchronous; and Python-side fields using snake_case (`is_error`, `input_schema`, `structured_content`) while the wire protocol they serialize to and from uses camelCase (`isError`, `inputSchema`) — none were application bugs, all were caught before they could reach real usage.
+
+### Verification
+- In-sandbox: registered the tool, checked its generated schema exposes exactly `query`/`top_k`/`doc_id`, and called it via `MCPServer`'s own public `call_tool()` against a local pgvector database seeded with two documents — confirmed correct similarity ordering *and* that the `doc_id` filter genuinely excludes the other document's closer-matching chunk (not just present in the schema, actually enforced in the query)
+- Real end-to-end: connected the official MCP Inspector (`npx @modelcontextprotocol/inspector python mcp_server.py`) to the actual server over real stdio transport, against the real, already-populated Neon database — `search_documents` returned real, correctly-ranked chunks and filenames from an actually-ingested PDF (`ICICNS2026_PaperID539_AR_CITIZEN.pdf`) for a genuinely relevant query, then confirmed the `doc_id` filter correctly scoped results in production and that an unfiltered call correctly retrieved across multiple distinct documents already in the database
