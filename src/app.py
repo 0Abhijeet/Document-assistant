@@ -261,8 +261,10 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 @app.post("/stream")
-async def stream_endpoint(question: str = Form(...)):
+async def stream_endpoint(question: str = Form(...), provider: str = Form("groq")):
     if not question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
-    generator = stream_answer(question)
+    if provider not in {"groq", "bedrock_invoke", "bedrock_converse"}:
+        raise HTTPException(status_code=400, detail=f"Unknown provider: {provider!r}")
+    generator = stream_answer(question, provider=provider)
     return StreamingResponse(generator, media_type="text/plain")

@@ -13,6 +13,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Deployed to production (Render + Neon), debugging real infrastructure issues along the way: stale local environments, deprecated model names, environment variable scoping, and out-of-memory crash loops
 - Separately deployed the same application to **AWS (EC2 + RDS)** to gain hands-on cloud infrastructure experience — VPC networking, IAM, security groups, and cross-provider database migration (see AWS deployment section below)
 - Wrapped the RAG pipeline's retrieval as an MCP (Model Context Protocol) tool — `search_documents`, with top-k and per-document filtering — verified against a live production database via the MCP Inspector and Claude Desktop
+- Added AWS Bedrock as an alternate LLM provider alongside Groq — both the legacy `InvokeModel` API and the unified `Converse` API — including a custom async bridge to stream boto3's fully synchronous responses without blocking the event loop, and diagnosed a real AWS account-level access restriction down to an isolated, minimal reproduction (see PROJECT_DETAILS.md §12)
 ## Tech stack
 | Layer | Technology |
 |---|---|
@@ -25,6 +26,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | CI/CD | GitHub Actions |
 | Deployment | Docker → Render (production); Docker → AWS EC2 + RDS (infrastructure exercise) |
 | Agent tooling | Model Context Protocol (MCP) — stdio transport, official `mcp` SDK |
+| LLM (alternate) | AWS Bedrock (Amazon Nova) — via `boto3`, both `InvokeModel` and `Converse` APIs |
 ## Architecture decisions (and why)
 | Decision | Reasoning |
 |---|---|
@@ -35,12 +37,14 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | Tests run against real Postgres, not SQLite | pgvector's vector type has no SQLite equivalent — testing against the real database catches schema and query bugs mocks would hide |
 | RDS security group referenced by ID, not IP | EC2's traffic to RDS originates from its security group identity inside the VPC, not from any external IP — an IP-based rule can never match it regardless of which IP is used |
 | Separate `mcp_server.py`, not a route on the existing app | Keeps the MCP tool decoupled from the FastAPI app's lifecycle and imports the existing service layer (`src.retrieve`) directly — no duplication, no changes to existing routes |
+| Custom async bridge for boto3 streaming | `boto3` has no async API; naively wrapping its blocking stream in a single `asyncio.to_thread` call would drain it entirely before yielding anything, defeating streaming. A background-thread-to-asyncio-Queue bridge preserves genuine incremental delivery — verified experimentally, not assumed |
 ## Known limitations
 Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
 - No auth on the upload endpoint — anyone with the URL can add documents
 - CI runs tests on push; deployment is manual, not yet automated
 - Embedding model reloads on cold start (free-tier hosting spins down when idle)
 - ivfflat index tuning (`lists = 100`) is a reasonable default, not benchmarked against real data volume
+- AWS Bedrock integration is code-complete and verified against mocked responses, but live end-to-end verification is currently blocked by an AWS account-level restriction (open AWS Support case) — see PROJECT_DETAILS.md §12
 ## Local development
 ```bash
 cp .env.example .env   # add your own GROQ_API_KEY and DATABASE_URL
@@ -77,4 +81,4 @@ The live demo above (Render + Neon) is the permanent, always-on version of this 
 
 ### AWS deployment (infrastructure exercise)
 
-Same app deployed separately to AWS EC2 + RDS to build hands-on cloud infrastructure experience (VPC networking, IAM, security groups, cross-provider DB migration). Full write-up, architecture, and debugging log: [`docs/PROJECT_DETAILS.md`]
+Same app deployed separately to AWS EC2 + RDS to build hands-on cloud infrastructure experience (VPC networking, IAM, security groups, cross-provider DB migration). Full write-up, architecture, and debugging log: [`project_docs/PROJECT_DETAILS.md`]
