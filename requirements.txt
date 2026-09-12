@@ -23,3 +23,4 @@ pytest-asyncio
 httpx
 mcp
 boto3
+langfuse

@@ -14,6 +14,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Separately deployed the same application to **AWS (EC2 + RDS)** to gain hands-on cloud infrastructure experience — VPC networking, IAM, security groups, and cross-provider database migration (see AWS deployment section below)
 - Wrapped the RAG pipeline's retrieval as an MCP (Model Context Protocol) tool — `search_documents`, with top-k and per-document filtering — verified against a live production database via the MCP Inspector and Claude Desktop
 - Added AWS Bedrock as an alternate LLM provider alongside Groq — both the legacy `InvokeModel` API and the unified `Converse` API — including a custom async bridge to stream boto3's fully synchronous responses without blocking the event loop, and diagnosed a real AWS account-level access restriction down to an isolated, minimal reproduction (see PROJECT_DETAILS.md §12)
+- Instrumented the pipeline with Langfuse (OpenTelemetry-based manual tracing) across all three LLM providers — nested retrieval and generation spans under one trace per request, and used the trace data to catch and confirm a real cold-start latency spike (11s → ~1s after warm-up)
 ## Tech stack
 | Layer | Technology |
 |---|---|
@@ -27,6 +28,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | Deployment | Docker → Render (production); Docker → AWS EC2 + RDS (infrastructure exercise) |
 | Agent tooling | Model Context Protocol (MCP) — stdio transport, official `mcp` SDK |
 | LLM (alternate) | AWS Bedrock (Amazon Nova) — via `boto3`, both `InvokeModel` and `Converse` APIs |
+| Observability | Langfuse (Cloud, free tier) — manual OpenTelemetry-based tracing |
 ## Architecture decisions (and why)
 | Decision | Reasoning |
 |---|---|
@@ -38,6 +40,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | RDS security group referenced by ID, not IP | EC2's traffic to RDS originates from its security group identity inside the VPC, not from any external IP — an IP-based rule can never match it regardless of which IP is used |
 | Separate `mcp_server.py`, not a route on the existing app | Keeps the MCP tool decoupled from the FastAPI app's lifecycle and imports the existing service layer (`src.retrieve`) directly — no duplication, no changes to existing routes |
 | Custom async bridge for boto3 streaming | `boto3` has no async API; naively wrapping its blocking stream in a single `asyncio.to_thread` call would drain it entirely before yielding anything, defeating streaming. A background-thread-to-asyncio-Queue bridge preserves genuine incremental delivery — verified experimentally, not assumed |
+| Manual Langfuse instrumentation, not `@observe` | `stream_answer` is an async generator with no single return value — `@observe`'s automatic output-capture has a known, currently-open upstream bug for async generators specifically (langfuse/langfuse#7226). Manual placement also keeps tracing scoped to the HTTP path only, since instrumenting inside `retrieve.py` would silently trace the MCP tool's separate call path into the same function |
 ## Known limitations
 Said out loud on purpose — demonstrating I understand the tradeoffs matters more than pretending they don't exist:
 - No auth on the upload endpoint — anyone with the URL can add documents
