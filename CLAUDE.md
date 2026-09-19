@@ -4,7 +4,7 @@ RAG document assistant: upload a PDF, ask questions, get answers streamed back. 
 
 ## Purpose and architecture
 
-FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a PDF (PyPDFLoader -> RecursiveCharacterTextSplitter 500/50 -> fastembed `BAAI/bge-small-en-v1.5`, 384-dim -> Postgres/pgvector), and `POST /stream` embeds the question, fetches the top-k nearest chunks by cosine distance, drops chunks below a similarity threshold, and streams an LLM answer (Groq by default; Bedrock optional). Every answered query is written to `query_logs` and traced in Langfuse. A separate stdio MCP server exposes the same retrieval function as a `search_documents` tool. There is no agent framework: the pipeline is a straight function chain, not a graph.
+FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a PDF (PyPDFLoader -> RecursiveCharacterTextSplitter 500/50 -> fastembed `BAAI/bge-small-en-v1.5`, 384-dim -> Postgres/pgvector), and `POST /stream` embeds the question, fetches the top-k nearest chunks by cosine distance, drops chunks below a similarity threshold, and streams an LLM answer (Groq by default; Bedrock, OpenAI or Azure optional). Every answered query is written to `query_logs` and traced in Langfuse. A separate stdio MCP server exposes the same retrieval function as a `search_documents` tool. There is no agent framework: the pipeline is a straight function chain, not a graph.
 
 | File | Role |
 |---|---|
@@ -14,13 +14,14 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 | `src/ingest.py` | `ingest_documents()`, lazy fastembed singleton `get_embeddings()` |
 | `src/bedrock.py` | Bedrock via raw `boto3` (`invoke_model_with_response_stream` and `converse_stream`) |
 | `src/openai_provider.py` | OpenAI direct via native `AsyncOpenAI`; lazy client; `OPENAI_MODEL` default `gpt-4o-mini`; imports `generate._build_prompt` inside the function (circular import otherwise) |
+| `src/azure_foundry.py` | Azure AI Foundry via Azure's OpenAI-compatible v1 route: `openai.AsyncOpenAI` with `base_url=<AZURE_OPENAI_ENDPOINT>/openai/v1/` (no api-version); lazy client; `model=` is the *deployment name* (`AZURE_OPENAI_DEPLOYMENT`, default `gpt-4.1-mini`); key from `AZURE_OPENAI_API_KEY`, sent as a Bearer token; uses chat completions (not the Responses API); skips empty-`choices` chunks |
 | `src/async_bridge.py` | `sync_iter_to_async`: thread + `asyncio.Queue` bridge so boto3's blocking stream yields incrementally |
 | `src/database.py` | Async engine/session, URL rewriting for asyncpg, `Base` |
 | `src/models.py` | `Document`, `Chunk`, `QueryLog` |
 | `src/tracing.py` | `get_langfuse_client()` wrapper |
 | `mcp_server.py` (repo root) | `search_documents(query, top_k=5, doc_id=None)` MCP tool |
 | `alembic/` | One migration, `0001_initial_schema.py` |
-| `tests/` | `conftest.py` (fake embeddings) and `test_rag_pipeline.py` (12 tests) |
+| `tests/` | `conftest.py` (fake embeddings) and `test_rag_pipeline.py` (16 tests) |
 | `project_docs/PROJECT_DETAILS.md` | The build log (debugging history, sections 4, 10-14). Canonical copy. `data/docs/PROJECT_DETAILS.md` is a stale duplicate; do not edit it |
 
 ## Tech stack (versions actually installed in `venv/`)
@@ -81,7 +82,7 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 
 ## Running things
 
-**Tests.** `python -m pytest -v` from the repo root; 12 tests, all against real Postgres + pgvector. `conftest.py` sets `DATABASE_URL` with `setdefault` to `postgresql://rag:ragpassword@localhost:5432/ragdb_test` and monkeypatches fastembed with a deterministic fake (no model download).
+**Tests.** `python -m pytest -v` from the repo root; 16 tests, all against real Postgres + pgvector. `conftest.py` sets `DATABASE_URL` with `setdefault` to `postgresql://rag:ragpassword@localhost:5432/ragdb_test` and monkeypatches fastembed with a deterministic fake (no model download).
 - **`clean_db` runs `drop_all` before and after every test on whatever `DATABASE_URL` points at.** Never run the suite with a Neon/RDS/dev URL in the environment. Use only a dedicated test database.
 - On this machine a local Postgres owns port 5432 and rejects the `rag` user, so the default fails with `InvalidPasswordError`. The compose db container is published on **15432** and already contains a `ragdb_test` database:
   `DATABASE_URL=postgresql://rag:ragpassword@localhost:15432/ragdb_test python -m pytest -v`
@@ -90,12 +91,12 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 - `test_upload_endpoint_accepts_pdf` writes a `*_sample.pdf` into `data/docs/` on every run and does not clean it up. Delete strays; `data/docs/` also holds tracked sample PDFs.
 - CI (`.github/workflows/ci.yml`): Python 3.11, `pgvector/pgvector:pg16` service on 5432 with db `ragdb_test`, `python -m pytest -v`. It does not run migrations and does not deploy.
 
-**App.** Needs `DATABASE_URL` and `GROQ_API_KEY` (from the environment or `.env`; `generate.py` reads `os.environ["GROQ_API_KEY"]` at import, so the app will not import without it). Optional: `SIMILARITY_THRESHOLD`, `BEDROCK_MODEL_ID`, `AWS_REGION`, `OPENAI_API_KEY` (required only for `provider=openai`; read lazily), `OPENAI_MODEL` (default `gpt-4o-mini`), `OPENAI_BASE_URL`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` (without Langfuse keys tracing is a safe no-op).
+**App.** Needs `DATABASE_URL` and `GROQ_API_KEY` (from the environment or `.env`; `generate.py` reads `os.environ["GROQ_API_KEY"]` at import, so the app will not import without it). Optional: `SIMILARITY_THRESHOLD`, `BEDROCK_MODEL_ID`, `AWS_REGION`, `OPENAI_API_KEY` (required only for `provider=openai`; read lazily), `OPENAI_MODEL` (default `gpt-4o-mini`), `OPENAI_BASE_URL`, `AZURE_OPENAI_API_KEY` + `AZURE_OPENAI_ENDPOINT` (both required only for `provider=azure`; read lazily), `AZURE_OPENAI_DEPLOYMENT`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` (without Langfuse keys tracing is a safe no-op).
 ```
 alembic upgrade head
 uvicorn src.app:app --reload        # Dockerfile CMD uses --host 0.0.0.0 --port 8000, no reload
 ```
-`/stream` takes form fields `question` and `provider` (`groq` | `bedrock_invoke` | `bedrock_converse` | `openai`); the provider set is validated in both `app.py` and `generate.py` and must be kept in sync. If behavior looks impossible given the code, restart the process before suspecting the logic (`--reload` has missed changes before). `docker compose up --build` runs the app plus a local db; see the compose caveat above.
+`/stream` takes form fields `question` and `provider` (`groq` | `bedrock_invoke` | `bedrock_converse` | `openai` | `azure`); the provider set is validated in both `app.py` and `generate.py` and must be kept in sync. If behavior looks impossible given the code, restart the process before suspecting the logic (`--reload` has missed changes before). `docker compose up --build` runs the app plus a local db; see the compose caveat above.
 
 **MCP server.** Standalone process, not mounted on the FastAPI app: `python mcp_server.py` (stdio transport), normally launched by an MCP client config (Claude Desktop, or `npx @modelcontextprotocol/inspector python mcp_server.py`). It imports `src.retrieve` directly, so it needs `DATABASE_URL` but not `GROQ_API_KEY`. Its default `top_k` is 5 (the RAG path uses `k=3`). Do not add Langfuse or threshold filtering to this path.
 
@@ -106,6 +107,7 @@ uvicorn src.app:app --reload        # Dockerfile CMD uses --host 0.0.0.0 --port 
 - **`provider=openai` has never called the real OpenAI service** (no real key). Verified only against a local fake SSE server via `OPENAI_BASE_URL` (incremental deltas, `query_logs` row) and unit tests. Langfuse traces for it are unverified.
 
 - **Bedrock has never made a successful live call.** Every invocation, even a bare synchronous `boto3.converse()` outside the app, fails with `ValidationException: Operation not allowed`: an AWS account-level restriction (support case open). What is verified: the async bridge (real incremental delivery), event parsing against documented schemas, provider dispatch, and `/stream` provider selection. Bedrock Langfuse traces are unverified for the same reason. Treat `bedrock_invoke` and `bedrock_converse` as untested against the real service.
+- **Azure: one real live call succeeded (2026-09-19)** through `POST /stream` with `provider=azure` against a real gpt-4.1-mini deployment (resource `...-4286-resource`, v1 route, chat completions): a short grounded answer came back and a `query_logs` row was written. Not verified: incremental token arrival on the real service (the answer was one short line; incremental delivery was only verified against a fake server), long answers, and Langfuse traces for Azure. Key and endpoint must come from the *same* Azure resource that holds the deployment, or Azure returns 401.
 - **No tests exist** for `mcp_server.py`, `bedrock.py`, or `async_bridge.py` in the repo; the build log's verification of those was done in ad hoc sandbox scripts that were not committed.
 - `SIMILARITY_THRESHOLD = 0.35` is a starting guess, not tuned on labeled data. The ivfflat `lists = 100` is also untuned.
 - No authentication, rate limiting, or per-user document scoping. Deployment (Render, and the AWS EC2 + RDS exercise) is manual; CI does not deploy. The AWS deployment is an interview artifact meant to be torn down, with an SSH security-group rule still open at `0.0.0.0/0`.

@@ -238,3 +238,87 @@ async def test_stream_answer_short_circuits_when_all_chunks_below_threshold(samp
         logs = (await db.execute(select(QueryLog))).scalars().all()
         assert len(logs) == 1
         assert logs[0].answer == NO_CONTEXT_ANSWER
+
+
+def _fake_openai_client(create):
+    from types import SimpleNamespace
+    return SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+
+
+def _openai_chunk(content, choices=True):
+    from types import SimpleNamespace
+    if not choices:
+        return SimpleNamespace(choices=[])
+    return SimpleNamespace(choices=[SimpleNamespace(delta=SimpleNamespace(content=content))])
+
+
+@pytest.mark.asyncio
+async def test_azure_provider_uses_deployment_name_and_skips_empty_choices(monkeypatch):
+    from src import azure_foundry
+
+    seen = {}
+
+    async def _stream():
+        yield _openai_chunk(None, choices=False)  # Azure's leading content-filter chunk
+        yield _openai_chunk("Az")
+        yield _openai_chunk(None)
+        yield _openai_chunk("ure")
+
+    async def _create(**kwargs):
+        seen.update(kwargs)
+        return _stream()
+
+    monkeypatch.setattr(azure_foundry, "get_azure_client", lambda: _fake_openai_client(_create))
+    monkeypatch.setattr(azure_foundry, "AZURE_OPENAI_DEPLOYMENT", "my-deployment")
+
+    out = [d async for d in azure_foundry.stream_answer_azure("q?", [{"content": "ctx"}])]
+    assert out == ["Az", "ure"]
+    assert seen["model"] == "my-deployment"
+    assert seen["stream"] is True
+    assert "ctx" in seen["messages"][0]["content"]
+
+
+def test_azure_client_is_lazy_and_needs_endpoint_and_key(monkeypatch):
+    from src import azure_foundry
+
+    monkeypatch.setattr(azure_foundry, "_azure_client", None)
+    monkeypatch.delenv("AZURE_OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("AZURE_OPENAI_ENDPOINT", raising=False)
+    with pytest.raises(KeyError):
+        azure_foundry.get_azure_client()
+
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "k")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://example-resource.openai.azure.com")
+    client = azure_foundry.get_azure_client()
+    assert str(client.base_url) == "https://example-resource.openai.azure.com/openai/v1/"
+    monkeypatch.setattr(azure_foundry, "_azure_client", None)
+
+
+def test_azure_v1_base_url_accepts_root_or_full_v1_url():
+    from src.azure_foundry import _v1_base_url
+
+    expected = "https://r.services.ai.azure.com/openai/v1/"
+    assert _v1_base_url("https://r.services.ai.azure.com") == expected
+    assert _v1_base_url("https://r.services.ai.azure.com/") == expected
+    assert _v1_base_url("https://r.services.ai.azure.com/openai/v1") == expected
+    assert _v1_base_url("https://r.services.ai.azure.com/openai/v1/") == expected
+
+
+@pytest.mark.asyncio
+async def test_stream_route_dispatches_azure_and_logs(sample_pdf, monkeypatch):
+    await ingest_documents(sample_pdf, "sample.pdf")
+    monkeypatch.setattr(generate, "SIMILARITY_THRESHOLD", -1.0)
+
+    async def _fake(question, context_chunks):
+        yield "az"
+        yield "ure"
+    monkeypatch.setitem(generate._PROVIDERS, "azure", _fake)
+
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        ok = await client.post("/stream", data={"question": "what is this?", "provider": "azure"})
+    assert ok.status_code == 200 and ok.text == "azure"
+
+    async with AsyncSessionLocal() as db:
+        logs = (await db.execute(select(QueryLog))).scalars().all()
+        assert len(logs) == 1 and logs[0].answer == "azure"
