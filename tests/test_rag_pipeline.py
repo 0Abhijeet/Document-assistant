@@ -149,6 +149,75 @@ async def test_stream_answer_short_circuits_on_empty_result_set(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_stream_answer_openai_dispatch_logs_query(sample_pdf, monkeypatch):
+    await ingest_documents(sample_pdf, "sample.pdf")
+    monkeypatch.setattr(generate, "SIMILARITY_THRESHOLD", -1.0)
+
+    async def _fake_openai(question, context_chunks):
+        yield "hello "
+        yield "world"
+    monkeypatch.setitem(generate._PROVIDERS, "openai", _fake_openai)
+
+    full_answer = "".join([d async for d in stream_answer("what does the document say?", provider="openai")])
+    assert full_answer == "hello world"
+
+    async with AsyncSessionLocal() as db:
+        logs = (await db.execute(select(QueryLog))).scalars().all()
+        assert len(logs) == 1
+        assert logs[0].answer == "hello world"
+
+
+@pytest.mark.asyncio
+async def test_openai_provider_yields_only_nonempty_text_deltas(monkeypatch):
+    from types import SimpleNamespace as NS
+    from src import openai_provider
+
+    def _chunk(content, choices=True):
+        return NS(choices=[NS(delta=NS(content=content))] if choices else [])
+
+    class _FakeStream:
+        def __aiter__(self):
+            async def gen():
+                for c in [_chunk(""), _chunk("Hel"), _chunk(None), _chunk("lo"), _chunk(None, choices=False)]:
+                    yield c
+            return gen()
+
+    seen = {}
+
+    class _FakeCompletions:
+        async def create(self, **kwargs):
+            seen.update(kwargs)
+            return _FakeStream()
+
+    fake_client = NS(chat=NS(completions=_FakeCompletions()))
+    monkeypatch.setattr(openai_provider, "get_openai_client", lambda: fake_client)
+
+    out = [d async for d in openai_provider.stream_answer_openai("q?", [{"content": "ctx"}])]
+    assert out == ["Hel", "lo"]
+    assert seen["stream"] is True
+    assert seen["model"] == openai_provider.OPENAI_MODEL
+    assert "ctx" in seen["messages"][0]["content"]
+
+
+@pytest.mark.asyncio
+async def test_stream_endpoint_provider_validation(sample_pdf, monkeypatch):
+    await ingest_documents(sample_pdf, "sample.pdf")
+
+    async def _fake(question, context_chunks):
+        yield "ok"
+    monkeypatch.setitem(generate._PROVIDERS, "openai", _fake)
+    monkeypatch.setattr(generate, "SIMILARITY_THRESHOLD", -1.0)
+
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+        bad = await client.post("/stream", data={"question": "hi", "provider": "nope"})
+        good = await client.post("/stream", data={"question": "hi", "provider": "openai"})
+    assert bad.status_code == 400
+    assert good.status_code == 200
+    assert good.text == "ok"
+
+
+@pytest.mark.asyncio
 async def test_stream_answer_short_circuits_when_all_chunks_below_threshold(sample_pdf, monkeypatch):
     """Chunks exist and are retrieved, but none clear the similarity
     threshold -- the near-empty-context case, distinct from an empty

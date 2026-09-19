@@ -13,13 +13,14 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 | `src/retrieve.py` | `retrieve_relevant_chunks(query, k=3, doc_id=None)`; returns `content, page, document_id, filename, similarity` (`1 - cosine_distance`) |
 | `src/ingest.py` | `ingest_documents()`, lazy fastembed singleton `get_embeddings()` |
 | `src/bedrock.py` | Bedrock via raw `boto3` (`invoke_model_with_response_stream` and `converse_stream`) |
+| `src/openai_provider.py` | OpenAI direct via native `AsyncOpenAI`; lazy client; `OPENAI_MODEL` default `gpt-4o-mini`; imports `generate._build_prompt` inside the function (circular import otherwise) |
 | `src/async_bridge.py` | `sync_iter_to_async`: thread + `asyncio.Queue` bridge so boto3's blocking stream yields incrementally |
 | `src/database.py` | Async engine/session, URL rewriting for asyncpg, `Base` |
 | `src/models.py` | `Document`, `Chunk`, `QueryLog` |
 | `src/tracing.py` | `get_langfuse_client()` wrapper |
 | `mcp_server.py` (repo root) | `search_documents(query, top_k=5, doc_id=None)` MCP tool |
 | `alembic/` | One migration, `0001_initial_schema.py` |
-| `tests/` | `conftest.py` (fake embeddings) and `test_rag_pipeline.py` (9 tests) |
+| `tests/` | `conftest.py` (fake embeddings) and `test_rag_pipeline.py` (12 tests) |
 | `project_docs/PROJECT_DETAILS.md` | The build log (debugging history, sections 4, 10-14). Canonical copy. `data/docs/PROJECT_DETAILS.md` is a stale duplicate; do not edit it |
 
 ## Tech stack (versions actually installed in `venv/`)
@@ -32,7 +33,9 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 - groq 1.6.0 (`AsyncGroq`), model `openai/gpt-oss-20b`
 - boto3 1.43.88, raw client, default model `amazon.nova-micro-v1:0` (override `BEDROCK_MODEL_ID`; region `AWS_REGION`, default `us-east-1`)
 - fastembed 0.8.0 (ONNX; no torch), langchain-community 0.4.2 + langchain-text-splitters 1.1.2 (PDF loading and splitting only), pypdf 6.16.1
+- openai 3.16.2 (`AsyncOpenAI`, `src/openai_provider.py`; default model `gpt-4o-mini`, override `OPENAI_MODEL`)
 - mcp 2.1.1 (v2 SDK: `from mcp.server.mcpserver import MCPServer`), langfuse 4.15.2
+- Local `venv/` also contains torch 2.14.0 and transformers 5.15.1: leftovers, not in `requirements.txt`, not used by the app. Do not add them (see below).
 - pytest 9.1.1, pytest-asyncio 1.4.0, httpx 0.28.1, reportlab 5.0.1
 
 ## Constraints to respect
@@ -78,7 +81,7 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 
 ## Running things
 
-**Tests.** `python -m pytest -v` from the repo root; 9 tests, all against real Postgres + pgvector. `conftest.py` sets `DATABASE_URL` with `setdefault` to `postgresql://rag:ragpassword@localhost:5432/ragdb_test` and monkeypatches fastembed with a deterministic fake (no model download).
+**Tests.** `python -m pytest -v` from the repo root; 12 tests, all against real Postgres + pgvector. `conftest.py` sets `DATABASE_URL` with `setdefault` to `postgresql://rag:ragpassword@localhost:5432/ragdb_test` and monkeypatches fastembed with a deterministic fake (no model download).
 - **`clean_db` runs `drop_all` before and after every test on whatever `DATABASE_URL` points at.** Never run the suite with a Neon/RDS/dev URL in the environment. Use only a dedicated test database.
 - On this machine a local Postgres owns port 5432 and rejects the `rag` user, so the default fails with `InvalidPasswordError`. The compose db container is published on **15432** and already contains a `ragdb_test` database:
   `DATABASE_URL=postgresql://rag:ragpassword@localhost:15432/ragdb_test python -m pytest -v`
@@ -87,18 +90,20 @@ FastAPI app (`src/app.py`) with two routes that matter: `POST /upload` ingests a
 - `test_upload_endpoint_accepts_pdf` writes a `*_sample.pdf` into `data/docs/` on every run and does not clean it up. Delete strays; `data/docs/` also holds tracked sample PDFs.
 - CI (`.github/workflows/ci.yml`): Python 3.11, `pgvector/pgvector:pg16` service on 5432 with db `ragdb_test`, `python -m pytest -v`. It does not run migrations and does not deploy.
 
-**App.** Needs `DATABASE_URL` and `GROQ_API_KEY` (from the environment or `.env`; `generate.py` reads `os.environ["GROQ_API_KEY"]` at import, so the app will not import without it). Optional: `SIMILARITY_THRESHOLD`, `BEDROCK_MODEL_ID`, `AWS_REGION`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` (without Langfuse keys tracing is a safe no-op).
+**App.** Needs `DATABASE_URL` and `GROQ_API_KEY` (from the environment or `.env`; `generate.py` reads `os.environ["GROQ_API_KEY"]` at import, so the app will not import without it). Optional: `SIMILARITY_THRESHOLD`, `BEDROCK_MODEL_ID`, `AWS_REGION`, `OPENAI_API_KEY` (required only for `provider=openai`; read lazily), `OPENAI_MODEL` (default `gpt-4o-mini`), `OPENAI_BASE_URL`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_HOST` (without Langfuse keys tracing is a safe no-op).
 ```
 alembic upgrade head
 uvicorn src.app:app --reload        # Dockerfile CMD uses --host 0.0.0.0 --port 8000, no reload
 ```
-`/stream` takes form fields `question` and `provider` (`groq` | `bedrock_invoke` | `bedrock_converse`); the provider set is validated in both `app.py` and `generate.py` and must be kept in sync. If behavior looks impossible given the code, restart the process before suspecting the logic (`--reload` has missed changes before). `docker compose up --build` runs the app plus a local db; see the compose caveat above.
+`/stream` takes form fields `question` and `provider` (`groq` | `bedrock_invoke` | `bedrock_converse` | `openai`); the provider set is validated in both `app.py` and `generate.py` and must be kept in sync. If behavior looks impossible given the code, restart the process before suspecting the logic (`--reload` has missed changes before). `docker compose up --build` runs the app plus a local db; see the compose caveat above.
 
 **MCP server.** Standalone process, not mounted on the FastAPI app: `python mcp_server.py` (stdio transport), normally launched by an MCP client config (Claude Desktop, or `npx @modelcontextprotocol/inspector python mcp_server.py`). It imports `src.retrieve` directly, so it needs `DATABASE_URL` but not `GROQ_API_KEY`. Its default `top_k` is 5 (the RAG path uses `k=3`). Do not add Langfuse or threshold filtering to this path.
 
 **Prompt duplication.** The prompt text exists twice: `_build_prompt` in `generate.py` (Groq) and `_build_messages` in `bedrock.py`. Change both or the providers diverge.
 
 ## Not implemented / not verified live
+
+- **`provider=openai` has never called the real OpenAI service** (no real key). Verified only against a local fake SSE server via `OPENAI_BASE_URL` (incremental deltas, `query_logs` row) and unit tests. Langfuse traces for it are unverified.
 
 - **Bedrock has never made a successful live call.** Every invocation, even a bare synchronous `boto3.converse()` outside the app, fails with `ValidationException: Operation not allowed`: an AWS account-level restriction (support case open). What is verified: the async bridge (real incremental delivery), event parsing against documented schemas, provider dispatch, and `/stream` provider selection. Bedrock Langfuse traces are unverified for the same reason. Treat `bedrock_invoke` and `bedrock_converse` as untested against the real service.
 - **No tests exist** for `mcp_server.py`, `bedrock.py`, or `async_bridge.py` in the repo; the build log's verification of those was done in ad hoc sandbox scripts that were not committed.

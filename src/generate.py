@@ -7,6 +7,7 @@ from src.retrieve import retrieve_relevant_chunks
 from src.database import AsyncSessionLocal
 from src.models import QueryLog
 from src.bedrock import stream_answer_bedrock_invoke_model, stream_answer_bedrock_converse
+from src.openai_provider import stream_answer_openai
 from src.tracing import get_langfuse_client
 
 client = AsyncGroq(api_key=os.environ["GROQ_API_KEY"])
@@ -61,6 +62,7 @@ _PROVIDERS = {
     "groq": _stream_groq,
     "bedrock_invoke": stream_answer_bedrock_invoke_model,
     "bedrock_converse": stream_answer_bedrock_converse,
+    "openai": stream_answer_openai,
 }
 
 
@@ -70,7 +72,7 @@ async def stream_answer(question: str, provider: str = "groq"):
     `await` (same as the old sync generator); FastAPI's StreamingResponse
     accepts async generators natively.
 
-    provider: "groq" (default), "bedrock_invoke", or "bedrock_converse".
+    provider: "groq" (default), "bedrock_invoke", "bedrock_converse", or "openai".
 
     Tracing: instrumented manually (not via @observe) for two reasons --
     this function is an async generator with no single return value, which

@@ -24,3 +24,4 @@ httpx
 mcp
 boto3
 langfuse
+openai
