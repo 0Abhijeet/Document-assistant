@@ -1,0 +1,9 @@
+{
+  "name": "rag-provider-tools",
+  "version": "0.1.1",
+  "description": "Skill for adding a new LLM provider (OpenAI, Gemini, Azure OpenAI, ...) to the rag-project model-serving abstraction: stream_answer() dispatch, /stream allowlist, provider contract, tests, docs.",
+  "author": { "name": "0Abhijeet" },
+  "repository": "https://github.com/0Abhijeet/Document-assistant",
+  "license": "MIT",
+  "keywords": ["rag", "llm", "provider", "fastapi"]
+}

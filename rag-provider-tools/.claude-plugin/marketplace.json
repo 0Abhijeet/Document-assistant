@@ -1,0 +1,17 @@
+{
+  "name": "rag-project-tools",
+  "owner": {
+    "name": "0Abhijeet"
+  },
+  "metadata": {
+    "description": "Local marketplace for rag-project Claude Code tooling."
+  },
+  "plugins": [
+    {
+      "name": "rag-provider-tools",
+      "source": "./",
+      "description": "Add a new LLM provider to the rag-project model-serving abstraction.",
+      "version": "0.1.1"
+    }
+  ]
+}
