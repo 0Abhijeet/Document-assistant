@@ -336,7 +336,7 @@ None in code. Live check note: the first two `/stream` questions (one generic, o
 
 ### Verification status
 - **Verified:** 3 new tests (dispatch + `query_logs` row, delta parsing that skips empty/None/no-choices chunks, route accepts `openai` and rejects unknown with 400); suite 12/12. Live run of the real app against a local fake OpenAI-compatible SSE server (via `OPENAI_BASE_URL`): deltas arrived incrementally (~0.5 s apart), a `query_logs` row was written with the full answer, unknown provider returned 400.
-- **Not verified:** any call to the real OpenAI service (no real key). The real endpoint's auth-error path with a dummy key was not exercised. Langfuse traces for this provider unverified.
+- **Not verified:** any call to the real OpenAI service. Reason: pricing concerns (OpenAI direct needs a separate paid account; the owner chose not to buy one, so there is no key). The real endpoint's auth-error path with a dummy key was not exercised. Langfuse traces for this provider unverified.
 
 ### 15.1 Claude Code skill and plugin for adding providers (September 2026)
 
@@ -362,7 +362,7 @@ Wrote a project skill, `add-llm-provider` (`.claude/skills/add-llm-provider/SKIL
 #### Verification
 - **Run 1 (loose skill, fresh headless session):** wrote `src/openai_provider.py`, registered it, updated the allowlist, added `openai` to `requirements.txt`. After the manual finish: 12/12 tests; real app via `POST /stream` against a local fake OpenAI-compatible SSE server (`OPENAI_BASE_URL`) on a throwaway DB migrated with `alembic upgrade head`: incremental deltas, `query_logs` row, unknown provider returns 400, the server saw `Bearer` dummy key, `gpt-4o-mini`, `stream: true`. A direct call to api.openai.com with a dummy key returned the expected 401 `AuthenticationError`.
 - **Run 2 (installed plugin, loose skill moved aside, same task from a clean baseline):** produced equivalent code, 3 new tests, docs including this section's parent; live check against the fake server (deltas ~0.5 s apart, `query_logs` row written, 400 on unknown); 12/12 tests, re-run independently afterwards. The two runs differed in small ways (run 1 `os.environ.get("OPENAI_API_KEY")`, run 2 `os.environ["OPENAI_API_KEY"]`); both are lazy, so a missing key only fails when `provider=openai` is selected.
-- **Not verified:** any call that succeeded against the real OpenAI service (no key). The dummy-key 401 check was done in run 1 only; run 2 skipped it as ambiguous. Langfuse traces for the OpenAI provider. Whether a skill added to an existing `.claude/skills/` hot-reloads. `openai` 3.16.2 lists `httpx2` among its requirements (confirmed with `pip show`); not investigated, but it matters for unpinned installs.
+- **Not verified:** any call that succeeded against the real OpenAI service (unverified due to pricing concerns; no paid account or key). The dummy-key 401 check was done in run 1 only; run 2 skipped it as ambiguous. Langfuse traces for the OpenAI provider. Whether a skill added to an existing `.claude/skills/` hot-reloads. `openai` 3.16.2 lists `httpx2` among its requirements (confirmed with `pip show`); not investigated, but it matters for unpinned installs.
 
 ## 16. Azure AI Foundry as an alternate LLM provider (September 2026)
 

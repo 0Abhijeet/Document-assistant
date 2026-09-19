@@ -57,7 +57,7 @@ Said out loud on purpose — demonstrating I understand the tradeoffs matters mo
 - Embedding model reloads on cold start (free-tier hosting spins down when idle)
 - ivfflat index tuning (`lists = 100`) is a reasonable default, not benchmarked against real data volume
 - AWS Bedrock integration is code-complete and verified against mocked responses, but live end-to-end verification is currently blocked by an AWS account-level restriction (open AWS Support case) — see PROJECT_DETAILS.md §12
-- OpenAI direct has never called the real OpenAI service (no key); it is verified against unit tests and a local fake server only
+- OpenAI direct is unverified against the real OpenAI service because of pricing concerns (it needs a separate paid OpenAI account; no key was bought). It is verified against unit tests and a local fake server only
 - Azure was confirmed with one real short call; incremental token arrival on the real service, long answers, and Langfuse traces for it are not verified
 - `SIMILARITY_THRESHOLD` (0.35) is not tuned on labeled data
 - A provider error after streaming has started reaches the client as an empty HTTP 200 (the error surfaces after headers are sent), and failed generations are not written to `query_logs`
