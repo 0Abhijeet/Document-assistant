@@ -13,6 +13,8 @@ from src.models import Document, Chunk, QueryLog
 from src.ingest import ingest_documents
 from src.retrieve import retrieve_relevant_chunks
 from src.app import app
+from src import generate
+from src.generate import stream_answer, NO_CONTEXT_ANSWER
 
 
 @pytest_asyncio.fixture(autouse=True)
@@ -125,3 +127,45 @@ async def test_query_log_table_exists_and_is_empty_initially():
     async with AsyncSessionLocal() as db:
         rows = (await db.execute(select(QueryLog))).scalars().all()
         assert len(rows) == 0
+
+
+@pytest.mark.asyncio
+async def test_stream_answer_short_circuits_on_empty_result_set(monkeypatch):
+    """No documents ingested at all -> retrieval returns []. Must not reach
+    the LLM provider (the real AsyncGroq call would fail anyway on the
+    fixture's fake API key, but this asserts the short-circuit explicitly
+    rather than relying on that failure)."""
+    def _unreachable(question, context_chunks):
+        raise AssertionError("LLM provider must not be called when retrieval returns no chunks")
+    monkeypatch.setitem(generate._PROVIDERS, "groq", _unreachable)
+
+    full_answer = "".join([delta async for delta in stream_answer("what does the document say?")])
+    assert full_answer == NO_CONTEXT_ANSWER
+
+    async with AsyncSessionLocal() as db:
+        logs = (await db.execute(select(QueryLog))).scalars().all()
+        assert len(logs) == 1
+        assert logs[0].answer == NO_CONTEXT_ANSWER
+
+
+@pytest.mark.asyncio
+async def test_stream_answer_short_circuits_when_all_chunks_below_threshold(sample_pdf, monkeypatch):
+    """Chunks exist and are retrieved, but none clear the similarity
+    threshold -- the near-empty-context case, distinct from an empty
+    result set. Forcing the threshold above the maximum possible cosine
+    similarity (1.0) guarantees every real retrieved chunk is filtered out,
+    without depending on the fake embedding model's exact vector math."""
+    await ingest_documents(sample_pdf, "sample.pdf")
+    monkeypatch.setattr(generate, "SIMILARITY_THRESHOLD", 1.1)
+
+    def _unreachable(question, context_chunks):
+        raise AssertionError("LLM provider must not be called when no chunk clears the similarity threshold")
+    monkeypatch.setitem(generate._PROVIDERS, "groq", _unreachable)
+
+    full_answer = "".join([delta async for delta in stream_answer("what does the document say?")])
+    assert full_answer == NO_CONTEXT_ANSWER
+
+    async with AsyncSessionLocal() as db:
+        logs = (await db.execute(select(QueryLog))).scalars().all()
+        assert len(logs) == 1
+        assert logs[0].answer == NO_CONTEXT_ANSWER

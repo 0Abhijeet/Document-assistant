@@ -12,6 +12,19 @@ from src.tracing import get_langfuse_client
 client = AsyncGroq(api_key=os.environ["GROQ_API_KEY"])
 MODEL = "openai/gpt-oss-20b"
 
+# bge-small-en-v1.5 cosine similarity for genuinely unrelated text still lands
+# well above 0, so 0 is not a usable "no match" floor -- an unfiltered top-k
+# will always return *something*, regardless of relevance. 0.35 is a starting
+# cutoff (not benchmarked against a labeled relevance set -- same honest
+# caveat as the ivfflat `lists=100` default elsewhere in this project),
+# overridable per-deployment without a code change.
+SIMILARITY_THRESHOLD = float(os.environ.get("SIMILARITY_THRESHOLD", "0.35"))
+
+NO_CONTEXT_ANSWER = (
+    "I couldn't find anything in the uploaded documents relevant to that question. "
+    "Try rephrasing, or upload a document that covers this topic."
+)
+
 
 def _build_prompt(question: str, context_chunks: list[dict]) -> str:
     context_text = "\n\n".join(c["content"] for c in context_chunks)
@@ -87,20 +100,36 @@ async def stream_answer(question: str, provider: str = "groq"):
             as_type="retriever", name="retrieve_relevant_chunks", input={"question": question}
         ) as retrieval_span:
             context_chunks = await retrieve_relevant_chunks(question)
-            retrieval_span.update(output={"chunk_count": len(context_chunks), "chunks": context_chunks})
+            relevant_chunks = [c for c in context_chunks if c["similarity"] >= SIMILARITY_THRESHOLD]
+            retrieval_span.update(output={
+                "chunk_count": len(context_chunks),
+                "relevant_chunk_count": len(relevant_chunks),
+                "similarity_threshold": SIMILARITY_THRESHOLD,
+                "chunks": context_chunks,
+            })
 
-        provider_stream = _PROVIDERS[provider](question, context_chunks)
+        if not relevant_chunks:
+            # Zero chunks cleared the bar -- either nothing was retrieved at
+            # all, or every candidate was too dissimilar to be real context.
+            # Short-circuits before the provider call: no LLM round-trip on
+            # context the model would otherwise have to either hallucinate
+            # around or (best case) just be told is irrelevant anyway.
+            full_answer = NO_CONTEXT_ANSWER
+            root_span.update(output=full_answer)
+            yield full_answer
+        else:
+            provider_stream = _PROVIDERS[provider](question, relevant_chunks)
 
-        full_answer = ""
-        with langfuse.start_as_current_observation(
-            as_type="generation", name=f"{provider}-generation", input=question, model=provider,
-        ) as generation:
-            async for delta in provider_stream:
-                full_answer += delta
-                yield delta
-            generation.update(output=full_answer)
+            full_answer = ""
+            with langfuse.start_as_current_observation(
+                as_type="generation", name=f"{provider}-generation", input=question, model=provider,
+            ) as generation:
+                async for delta in provider_stream:
+                    full_answer += delta
+                    yield delta
+                generation.update(output=full_answer)
 
-        root_span.update(output=full_answer)
+            root_span.update(output=full_answer)
 
     await _log_query(question, full_answer)
 
