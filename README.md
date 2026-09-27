@@ -19,6 +19,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Added a similarity-threshold guard (`SIMILARITY_THRESHOLD`, default 0.35, not benchmarked): when no retrieved chunk is relevant enough, the app skips the LLM call, returns a fixed "no relevant context" answer, and still logs the query and closes the trace (see PROJECT_DETAILS.md §14)
 - Grew the provider abstraction to five per-request-selectable providers (Groq, Bedrock `InvokeModel`, Bedrock `Converse`, OpenAI direct, **Azure AI Foundry**), all raw SDKs with no framework wrapper. Azure (gpt-4.1-mini via Azure's OpenAI-compatible v1 endpoint) was confirmed with a real live call, after checking billing risk up front and diagnosing a 401 caused by a key from the wrong Azure resource. OpenAI direct is wired and unit-tested but has never called the real service (see §15–16)
 - Wrote a Claude Code skill (`add-llm-provider`) and packaged it as an installable plugin (`rag-provider-tools`), then used the installed plugin to re-run a full provider addition; the bugs found along the way are logged in PROJECT_DETAILS.md §15.1
+- Built a 38-question golden-set eval harness (retrieval precision@k/recall@k/MRR against real chunk IDs, plus an LLM-judge for faithfulness/relevance, wired into Langfuse as a real dataset/experiment run) and ran it once for real against the live system — no tuning or cherry-picking after seeing the numbers. The run itself surfaced a genuine production bug before it even completed: pgvector's `ivfflat.probes` default (1) was silently truncating retrieval on the current table size, confirmed across all 38 questions and fixed; the completed run then also caught a real cross-document identity-mixing case live (see PROJECT_DETAILS.md §18)
 ## Tech stack
 | Layer | Technology |
 |---|---|
@@ -36,6 +37,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 | LLM (alternate) | OpenAI direct — `openai` SDK, `AsyncOpenAI` (not verified against the real service) |
 | LLM (alternate) | Azure AI Foundry — gpt-4.1-mini through Azure's OpenAI-compatible v1 endpoint, `openai` SDK `AsyncOpenAI` (verified live once) |
 | Dev tooling | Claude Code skill + plugin (`rag-provider-tools`) for adding providers |
+| Eval harness | DeepEval (custom LLM-judge metric, raw Azure client, no LangChain) + Langfuse dataset/experiment runs — golden-set precision@k/recall@k/MRR and faithfulness/relevance (dev-only, `requirements-eval.txt`, not deployed) |
 ## Architecture decisions (and why)
 | Decision | Reasoning |
 |---|---|
@@ -56,7 +58,7 @@ Said out loud on purpose — demonstrating I understand the tradeoffs matters mo
 - No auth on the upload endpoint — anyone with the URL can add documents
 - CI runs tests on push; deployment is manual, not yet automated
 - Embedding model reloads on cold start (free-tier hosting spins down when idle)
-- ivfflat index tuning (`lists = 100`) is a reasonable default, not benchmarked against real data volume
+- ivfflat index tuning (`lists = 100`) is oversized for the current ~236-row `chunks` table, not just "unbenchmarked": pgvector's `ivfflat.probes` default (1) was measurably truncating retrieval as a result (confirmed on 5/38 real golden-set questions, 4 to zero rows) until `IVFFLAT_PROBES` (default 10) was added — see PROJECT_DETAILS.md §18. The `lists` value itself hasn't been re-migrated down to match current row count
 - AWS Bedrock integration is code-complete and verified against mocked responses, but live end-to-end verification is currently blocked by an AWS account-level restriction (open AWS Support case) — see PROJECT_DETAILS.md §12
 - OpenAI direct is unverified against the real OpenAI service because of pricing concerns (it needs a separate paid OpenAI account; no key was bought). It is verified against unit tests and a local fake server only
 - Azure was confirmed with one real short call; incremental token arrival on the real service, long answers, and Langfuse traces for it are not verified
