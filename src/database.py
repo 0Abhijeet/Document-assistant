@@ -4,6 +4,7 @@ from urllib.parse import urlparse, urlunparse
 from dotenv import load_dotenv
 load_dotenv()
 
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import declarative_base
 
@@ -43,6 +44,37 @@ if "-pooler" in RAW_DATABASE_URL:
     _connect_args["statement_cache_size"] = 0
 
 engine = create_async_engine(ASYNC_DATABASE_URL, pool_pre_ping=True, connect_args=_connect_args)
+
+# ivfflat.probes: pgvector's own default is 1, i.e. a similarity query only
+# scans one of the ix_chunks_embedding index's `lists=100` partitions. With
+# only 236 rows in `chunks` right now, that's ~2.4 rows per partition --
+# severely over-partitioned for this table size -- so a real query's true
+# nearest neighbors frequently land in a partition that never gets probed.
+# Verified directly (not assumed), across all 38 real questions in
+# Golden_questions.json at probes=1: 5/38 got fewer than the requested k=3
+# rows back, 4 of those got ZERO rows -- meaning generate.py's
+# SIMILARITY_THRESHOLD guard would fire NO_CONTEXT_ANSWER regardless of
+# whether the real answer existed in the DB. At probes=10: 0/38 truncated.
+# asyncpg's `server_settings` connect kwarg does NOT work for this --
+# extension-defined GUCs aren't recognized in the startup packet before the
+# extension loads (raises `UndefinedObjectError`, verified). Setting it via
+# a real `SET` after connect, through the DBAPI-level "connect" pool event,
+# is the asyncpg-specific way to run this on every new physical connection;
+# `dbapi_connection.run_async(...)` is SQLAlchemy's asyncpg adapter's own
+# escape hatch for exactly this (a sync event callback wrapping an async
+# asyncpg call). 10 is not benchmarked against a larger/labeled dataset --
+# same "starting value, revisit later" caveat as SIMILARITY_THRESHOLD and
+# `lists=100` itself, which remains oversized for the current row count and
+# should be revisited (smaller `lists`, in a new migration) as the table
+# grows past a few thousand rows.
+IVFFLAT_PROBES = int(os.environ.get("IVFFLAT_PROBES", "10"))
+
+
+@event.listens_for(engine.sync_engine, "connect")
+def _set_ivfflat_probes(dbapi_connection, connection_record):
+    dbapi_connection.run_async(
+        lambda asyncpg_conn: asyncpg_conn.execute(f"SET ivfflat.probes = {IVFFLAT_PROBES}")
+    )
 
 # expire_on_commit=False: with a sync Session, accessing an attribute after
 # commit() triggers an implicit lazy-load (a blocking DB round trip) to

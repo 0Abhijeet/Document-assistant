@@ -418,3 +418,57 @@ Confirmed batch_size has no effect on the embedding values themselves: embedding
 ### Verification status
 - **Verified:** the memory measurement above, and the batch-size-invariance of embedding output, both against the real fastembed model in this project's venv.
 - **Not verified:** the real pytest suite against this change (Docker Desktop was not running at fix time). No live upload against the hosted Render instance has been done since the fix — the Render OOM is not yet confirmed gone in production, only strongly diagnosed and fixed locally.
+
+## 18. Golden-set eval harness + a real ivfflat retrieval bug it surfaced (September 2026)
+
+### Decision
+Built a 38-question golden set (`Golden_questions.json`, hand-verified against real chunk UUIDs pulled from the live Neon `chunks` table for the two uploaded AR-CITIZEN paper versions) and a eval harness under `eval/` (new, dev-only — its one dependency, `deepeval`, lives in `requirements-eval.txt`, never in `requirements.txt`, so it never reaches the Docker image or Render). Chose **DeepEval over RAGAS**: RAGAS's LLM-judge integration is built around LangChain's `BaseChatModel`, which would force-add a LangChain dependency tree onto this project purely for eval plumbing, directly against this repo's own already-logged "raw provider SDKs, no LangChain wrapper" decision. DeepEval's `DeepEvalBaseLLM` is a plain ABC — `eval/azure_judge_llm.py` wraps the *already-verified-live* Azure client from `src/azure_foundry.py` directly, no new client code, no LangChain. Retrieval metrics (precision@3/recall@3/MRR against real `expected_chunk_ids`) are plain Python (`eval/retrieval_metrics.py`) — neither RAGAS's nor DeepEval's built-in context metrics do exact chunk-ID overlap against known ground truth, they do LLM-judged relevance, which is a different thing.
+
+**Judge model, deliberately separate from the production model being evaluated:** Azure `gpt-4.1-mini` judges; Groq `openai/gpt-oss-20b` (via the real `src.generate.stream_answer(provider="groq")`) generates. Avoids a model grading its own answers.
+
+**Judge prompt** (`eval/judge_metric.py`, module-level constants `JUDGE_SYSTEM_PROMPT` / `JUDGE_USER_TEMPLATE`, printable/inspectable verbatim, not a library-internal template): scores faithfulness (are the answer's claims supported by the *actual* retrieved, threshold-filtered context — not the golden chunk IDs) and relevance (does the answer address the question) in one combined call, returning strict JSON.
+
+**Langfuse wiring:** not a standalone script. Uses the SDK's own `dataset.run_experiment(task=..., evaluators=[...])` (Langfuse 4.15.2) — creates the `golden-set-v1` dataset + items once, then every run is a first-class Langfuse dataset run with per-item scores (`precision_at_3`, `recall_at_3`, `mrr_at_3`, `faithfulness`, `relevance`) attached to the real trace.
+
+### Real bug found and fixed (verified, not assumed): `ivfflat.probes` default silently truncates retrieval
+Smoke-testing one golden question before the paid run, `retrieve_relevant_chunks(query, k=3)` returned **1** chunk, not 3. Traced through every layer (ORM query construct, asyncpg, raw psycopg2, `EXPLAIN`) before concluding the cause: pgvector's own `ivfflat.probes` default is **1**, and nothing in this codebase ever set it. The `chunks` table currently has 236 rows against the migration's `lists = 100` — ~2.4 rows per partition, severely over-partitioned for this size — so scanning only 1 of 100 partitions (`probes=1`) frequently misses the true nearest neighbors entirely.
+
+Measured directly, forcing `enable_indexscan=off` (sequential scan, bypasses the index) vs. varying `probes` on the exact failing query/vector:
+| `ivfflat.probes` | rows returned (LIMIT 10) |
+|---|---|
+| 1 (the actual production default) | 1 |
+| 2 | 1 |
+| 5 | 10 |
+| 10 | 10 |
+
+Checked across **all 38 real golden questions**, not just the one anecdote: at `probes=1`, **5/38 (13%) got fewer than the requested k=3 rows back, and 4 of those got zero rows** — meaning `generate.py`'s `SIMILARITY_THRESHOLD` guard would fire `NO_CONTEXT_ANSWER` for those regardless of whether the real answer existed in the DB. At `probes=10`: 0/38 truncated.
+
+**Fix:** `src/database.py` now sets `ivfflat.probes` (env-overridable `IVFFLAT_PROBES`, default 10) on every new physical connection via the `"connect"` event on `engine.sync_engine`, using SQLAlchemy's asyncpg adapter's `dbapi_connection.run_async(...)` — the correct hook for running a real post-connect `SET` on an async driver. Tried `connect_args={"server_settings": {...}}` first (asyncpg's normal per-connection-setting mechanism); it does **not** work for extension-defined GUCs — raises `asyncpg.exceptions.UndefinedObjectError: unrecognized configuration parameter "ivfflat.probes"`, because custom GUCs aren't recognized in the startup packet before the extension loads. Verified the fix against the real production code path (`retrieve_relevant_chunks`) directly, not just the raw SQL repro.
+
+Also additive, non-breaking: `retrieve.py`'s returned chunk dicts now include `"id"` (the chunk's own UUID) — needed for the golden set's `expected_chunk_ids` to mean anything; existing consumers (app.py's prompt builder, the MCP tool, `tests/test_rag_pipeline.py`) only ever read specific keys or check `"content" in results[0]`, so this doesn't break anything (checked, not assumed).
+
+`lists = 100` itself remains oversized for the current row count and is not fixed here — that needs a new migration (drop/rebuild the index with a smaller `lists`), out of scope for this pass; `IVFFLAT_PROBES=10` is a value chosen from the measurement above, not benchmarked against a larger dataset, same "starting value" caveat as `SIMILARITY_THRESHOLD`.
+
+### First real eval run — actual numbers, not tuned or cherry-picked
+Run against the *fixed* system (probes bug fixed first, per explicit instruction, before spending eval tokens on numbers that would mostly measure an index bug rather than RAG quality). First attempt at `max_concurrency=3` completed only 26/38 items — 12 failed on Groq free-tier rate limits (8000 TPM, `openai/gpt-oss-20b`). Rerun at `max_concurrency=1` (sequential) completed 38/38, 0 failures. **Reported numbers below are from the complete 38/38 sequential run**, not the partial one.
+
+**Aggregate scores (38 questions, 3 excluded from precision/recall/MRR by design — no ground-truth chunk):**
+| Metric | Score |
+|---|---|
+| faithfulness (mean) | 0.945 |
+| relevance (mean) | 1.000 |
+| precision@3 (mean, n=35) | 0.143 |
+| recall@3 (mean, n=35) | 0.386 |
+| MRR@3 (mean, n=35) | 0.295 |
+
+Langfuse dataset run: https://jp.cloud.langfuse.com/project/cmtyj56ul02b5ad0imca6cfld/datasets/cmujmrb1w00c8ad0efyya9ugf/runs/031210ef-56e0-4ccf-a5ef-7d65314a9ac1
+
+**Finding 1 — precision@3/recall@3 understate real answer quality here, and it's traceable to a specific cause, not just "bad retrieval":** relevance is 1.000 and faithfulness is 0.945 even though recall@3 is only 0.386 (many questions retrieved zero of their single hand-picked "gold" chunk in the top 3, yet still got a fully faithful, relevant answer — e.g. q01 "What is AR-CITIZEN?": 0 precision/recall, 1.0 faithfulness/relevance, because a *different* chunk in the same document (or the near-duplicate other uploaded paper) restates the same fact). Root cause: this golden set's `expected_chunk_ids` name one specific chunk per fact, but 500-char/50-overlap chunking plus two near-duplicate uploaded document versions (see §-implied earlier discussion of `AR_CITIZEN_Paper.pdf` vs `ICICNS2026_PaperID539_AR_CITIZEN.pdf`) mean several chunks legitimately contain the same fact. Exact chunk-ID recall is a real, conservative, correctly-measured number — it is not a proxy for "was the retrieved context adequate."
+
+**Finding 2 — a real cross-document identity-contamination bug, confirmed live (q21):** asked specifically about the ICICNS2026 submission's author title for Sonia Jenifer Rayen (correct answer: no title given), retrieval returned two chunks from the *other* uploaded document (`AR_CITIZEN_Paper.pdf`, which does give her "Dr.") alongside one ICICNS2026 chunk, and the model answered "Dr." — wrong for the document actually asked about. Faithfulness scored 0.0 (the judge correctly flagged the claim as present in *a* retrieved chunk but not resolving the actual question asked). This is the exact failure mode predicted when the golden set was built (`/stream` has no `doc_id` scoping, so k=3 draws from the whole store) — now measured, not just predicted.
+
+**Finding 3 — a real pattern: when retrieval misses the right chunk, the production model sometimes fabricates plausible specifics instead of staying conservative (q06, q09, q16 — faithfulness 0.5, 0.5, 0.9):** in each case the correct chunk was outside the top-3 (0 recall), and rather than answering only from what was actually retrieved, the model added specific-sounding claims not present in the retrieved text (e.g. q16: invented a "before-and-after... measured by looking at how many duplicate tickets were correctly merged" methodology narrative around otherwise-correct percentages that were in context; q06/q09: invented specific mechanisms — "paint patterns, mounting hardware," "lets analysts... trace back to the underlying cause" — not stated in what was retrieved). This is a real, non-cherry-picked faithfulness risk correlated with retrieval misses, distinct from Finding 1 (which is a golden-set measurement artifact, not a model behavior problem).
+
+### Verification status
+- **Verified:** the `ivfflat.probes` bug and its fix, directly against the real production code path and across all 38 real questions (not a single anecdote). The full 38/38 real eval run, judge prompt shown verbatim, Langfuse dataset run live and linked above.
+- **Not verified:** the real pytest suite against the `database.py`/`retrieve.py` changes in this section (Docker Desktop was not running at fix time — same gap as §17). No decision has been made yet on the `lists=100` re-migration; that's flagged, not fixed.

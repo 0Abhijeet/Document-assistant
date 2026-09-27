@@ -1,0 +1,5 @@
+# Dev-only dependencies for the golden-set eval harness (src/eval/).
+# Deliberately NOT in requirements.txt: this never ships in the Docker
+# image or runs on Render. Install with:
+#   pip install -r requirements-eval.txt
+deepeval

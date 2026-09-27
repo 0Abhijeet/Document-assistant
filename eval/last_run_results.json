@@ -1,0 +1,1686 @@
+{
+  "dataset_run_id": "031210ef-56e0-4ccf-a5ef-7d65314a9ac1",
+  "dataset_run_url": "https://jp.cloud.langfuse.com/project/cmtyj56ul02b5ad0imca6cfld/datasets/cmujmrb1w00c8ad0efyya9ugf/runs/031210ef-56e0-4ccf-a5ef-7d65314a9ac1",
+  "items": [
+    {
+      "id": "q38",
+      "input": "In the ICICNS2026 abstract, what does AR-CITIZEN's retrieval-augmented LLM do?",
+      "output": {
+        "answer": "In the ICICNS2026 abstract, AR\u2011CITIZEN\u2019s retrieval\u2011augmented LLM answers user queries by pulling in and grounding responses with data retrieved from a curated civic datastore.",
+        "retrieved_ids": [
+          "0a07212a-f4e8-4237-b497-4b31f689df93",
+          "a261db58-5c6f-4f67-ad01-4ac866fc85a3",
+          "953ee495-d953-4fcb-a143-b38caaa926d8"
+        ],
+        "relevant_context": [
+          "navigate multiple drop -down menus.  \nAR CITIZEN reverses this burden by letting the \ninfrastructure itself become the interface. Instead of the \ncitizen explaining where an issue is, the system visually \nrecognizes it and brings relevant records into the user\u2019s \nfield of view. By combining AR vis ualization, computer \nvision detection, OCR based identifier extraction, \ngeolocation services, structured civic data retrieval, and AI \ngrounded explanation, the architecture forms one seamless",
+          "navigate multiple drop -down menus.  \nAR CITIZEN reverses this burden by letting the \ninfrastructure itself become the interface. Instead of the \ncitizen explaining where an issue is, the system visually \nrecognizes it and brings relevant records into the user\u2019s \nfield of view. By combining AR vis ualization, computer \nvision detection, OCR based identifier extraction, \ngeolocation services, structured civic data retrieval, and AI \ngrounded explanation, the architecture forms one seamless",
+          "scene, offer weak feedback loops, and place the full \nreporting burden on citizens. AR-CITIZEN proposes an AI-\ndriven augmented -reality platform that uses a smartphone \ncamera, geolocation, compass data, lightweight vision, and \nOCR to identify civic assets and display AR tags that shows \ndepartments, service history, issues, and nearby reports. A \nretrieval-augmented LLM answers queries using grounded \ndata from a curated civic datastore. Citizens can submit geo-"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly explains what AR-CITIZEN's retrieval-augmented LLM does according to the provided context."
+        }
+      ]
+    },
+    {
+      "id": "q37",
+      "input": "How many participants or what sample size were involved in the AR-CITIZEN user study?",
+      "output": {
+        "answer": "I\u2019m sorry, but the provided context doesn\u2019t include any information about the number of participants or the sample size used in the AR\u2011Citizen user study.",
+        "retrieved_ids": [
+          "4c2ec422-0080-41f3-8a12-83411a63cb39",
+          "7c90921b-913d-4742-ba41-a5cfb12149df",
+          "0a54ffef-8111-4036-ad57-e76d05d3776a"
+        ],
+        "relevant_context": [
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a",
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a",
+          "unclear. Users report issues but hardly get any meaningful \nfeedback or visual confirmation. This weakens trust and \nreduces long term participation. The proposed system, AR \nCITIZEN, removes this gap by directly linking reporting to \nthe asset in question. Instead of filling out forms, the user \npoints his phone against a streetlight, road patch, bus stop, \nor signboard, and the system automatically identifies it via \nGPS, heading, and computer vision. Existing tickets,"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "retrieval_no_ground_truth",
+          "value": true,
+          "comment": "No expected_chunk_ids for this question (trap/no-context question) -- excluded from precision/recall/MRR aggregates by design."
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the retrieved context does not contain any information about the number of participants or sample size, directly addressing the user's question."
+        }
+      ]
+    },
+    {
+      "id": "q36",
+      "input": "Which reference number does the ICICNS2026 paper cite for \"RAG Models for Civic Data Summarization\"?",
+      "output": {
+        "answer": "The ICICNS2026 paper cites \u201cRAG Models for Civic Data Summarization\u201d as reference **[16]**.",
+        "retrieved_ids": [
+          "8ca61ec5-7976-4040-ac95-ea95a188b642",
+          "bfbcaf23-62be-4d5d-997d-e1a4ac2f90f0",
+          "e35996a7-7308-4188-854a-d83ac937910a"
+        ],
+        "relevant_context": [
+          "141224, 2021.  \n[15] A. Gupta and R. Dias, \u201cLightweight AR Tagging Systems for Urban \nCommunication,\u201d Proc. IEEE ISMAR Workshops, pp. 245 \u2013254, \n2021.  \n[16] F. Silva and C. Montes, \u201cRAG Models for Civic Data \nSummarization,\u201d Proc. ACM Intelligent User Interfaces, pp. 199\u2013\n210, 2021.  \n[17] J. Edwards and P. Lee, \u201cGrounding and Hallucination Control in \nGovernment -Linked LLM Responses,\u201d IEEE Transactions on \nInformation Theory, vol. 67, no. 9, pp. 6120 \u20136135, 2021.",
+          "141224, 2021.  \n[15] A. Gupta and R. Dias, \u201cLightweight AR Tagging Systems for Urban \nCommunication,\u201d Proc. IEEE ISMAR Workshops, pp. 245 \u2013254, \n2021.  \n[16] F. Silva and C. Montes, \u201cRAG Models for Civic Data \nSummarization,\u201d Proc. ACM Intelligent User Interfaces, pp. 199\u2013\n210, 2021.  \n[17] J. Edwards and P. Lee, \u201cGrounding and Hallucination Control in \nGovernment -Linked LLM Responses,\u201d IEEE Transactions on \nInformation Theory, vol. 67, no. 9, pp. 6120 \u20136135, 2021.",
+          "2021.  \n[15] A. Gupta and R. Dias, \u201cLightweight AR Tagging Systems for Urban \nCommunication,\u201d Proc. IEEE ISMAR Workshops, pp. 245 \u2013254, 2021.  \n[16] F. Silva and C. Montes, \u201cRAG Models for Civic Data Summarization,\u201d \nProc. ACM Intelligent User Interfaces, pp. 199\u2013210, 2021.  \n[17] J. Edwards and P. Lee, \u201cGrounding and Hallucination Control in \nGovernment -Linked LLM Responses,\u201d IEEE Transactions on \nInformation Theory, vol. 67, no. 9, pp. 6120 \u20136135, 2021."
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly identifies the reference number for the cited paper as requested, fully supported by the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q35",
+      "input": "What will future work focus on, according to the conclusion?",
+      "output": {
+        "answer": "According to the conclusion, future work will focus on:\n\n1. **Building a functional mobile prototype** of the system.  \n2. **Evaluating the system through controlled user studies** to gather empirical data.  \n3. **Analyzing key performance indicators** such as reporting accuracy, latency, and trust improvements across different urban settings.",
+        "retrieved_ids": [
+          "92141ae3-e81f-443e-8377-e7629925c600",
+          "fcd68287-d7ab-454b-b1d5-43abe43ffcf2",
+          "611ca596-9e6b-4d2a-ab33-8b569a6a3ef5"
+        ],
+        "relevant_context": [
+          "been implemented on a large scale in the real world, as the \nsystem is still in the design prototype phase. Future work \nwill focus on building a functional mobile prototype, \nevaluating the system through controlled user studies, and \nanalyzing reporting accuracy, latency, and trust \nimprovements in various urban settings. Other potential \nresearch areas include the use of predictive analytics for \nmunicipal maintenance, real -time municipal dashboard",
+          "a clear, visible exchange between residents and city \nworkers, replacing confusion with accurate, confirmed \ninformation.  \n \nFig.3. Performance Metrics  \n \nVII.  FUTURE SCOPE OF THE PROJECT \nAR CITIZEN can evolve into an urban interaction layer \nwhere a city\u2019s infrastructure, services, and citizen \nengagement operate through a single connected platform. \nPredictive maintenance using machine learning models to \nanticipate the failure of assets and reduce repair delays and",
+          "a clear, visible exchange between residents and city \nworkers, replacing confusion with accurate, confirmed \ninformation.  \n \nFig.3. Performance Metrics  \n \nVII.  FUTURE SCOPE OF THE PROJECT \nAR CITIZEN can evolve into an urban interaction layer \nwhere a city\u2019s infrastructure, services, and citizen \nengagement operate through a single connected platform. \nPredictive maintenance using machine learning models to \nanticipate the failure of assets and reduce repair delays and"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly and completely summarizes the future work focus as stated in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q34",
+      "input": "What key limitation does the ICICNS2026 paper's conclusion admit about AR-CITIZEN?",
+      "output": {
+        "answer": "I\u2019m sorry, but the provided context does not include the conclusion of the ICICNS2026 paper, so I can\u2019t find the key limitation it admits.",
+        "retrieved_ids": [
+          "7c90921b-913d-4742-ba41-a5cfb12149df",
+          "4c2ec422-0080-41f3-8a12-83411a63cb39",
+          "4cf23a66-b198-41f9-9948-fe5db0b39aea"
+        ],
+        "relevant_context": [
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a",
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a",
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the key limitation from the paper's conclusion is not present in the provided context, directly addressing the question based on the given information."
+        }
+      ]
+    },
+    {
+      "id": "q33",
+      "input": "Does the ICICNS2026 submission report quantitative performance numbers (e.g. percentage improvements) for AR-CITIZEN?",
+      "output": {
+        "answer": "Yes. The submission includes a set of quantitative scores (percentages) comparing AR\u2011CITIZEN to the existing system on metrics such as asset identification, duplicate\u2011report handling, report verification speed, metadata accuracy, citizen satisfaction, and average resolution time. These scores are presented as percentages (out of 100) on the graph.",
+        "retrieved_ids": [
+          "b184d14d-a676-418c-9a9f-0417ef44cc20",
+          "33263761-e4f2-4f7d-a959-4f98cae8cf34",
+          "7c90921b-913d-4742-ba41-a5cfb12149df"
+        ],
+        "relevant_context": [
+          "Ticketing and Service Resolution,\u201d Proc. IEEE Smart City Governance \nConference, pp. 88 \u201399, 2024.  \n0 20 40 60 80 100\nAsset Identification\u2026\nDuplicate Report Handling\nReport Verification Speed\nMetadata Accuracy (IDs,\u2026\nCitizen\u2026\nAverage Resolution\u2026\nAR CITIZEN (Score %) Existing System (Score %)",
+          "Ticketing and Service Resolution,\u201d Proc. IEEE Smart City Governance \nConference, pp. 88 \u201399, 2024.  \n0 20 40 60 80 100\nAsset Identification\u2026\nDuplicate Report Handling\nReport Verification Speed\nMetadata Accuracy (IDs,\u2026\nCitizen\u2026\nAverage Resolution\u2026\nAR CITIZEN (Score %) Existing System (Score %)",
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by confirming the presence of quantitative percentage scores for AR-CITIZEN in the submission, as shown in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q32",
+      "input": "According to the Comparison with Existing System section, what three things does a traditional civic reporting system ask a user to do manually?",
+      "output": {
+        "answer": "According to the Comparison with Existing System section, a traditional civic reporting system asks a user to:\n1. **Describe the problem manually**  \n2. **Select a department**  \n3. **Type the location**",
+        "retrieved_ids": [
+          "420c4743-1e52-4cbe-857b-25ed384eeec8",
+          "b494b5da-5761-44e7-9173-f343804a432c",
+          "3864a127-c31a-4406-9873-f3f2207059ac"
+        ],
+        "relevant_context": [
+          "accountability . \nV. COMPARISON WITH EXISTING SYSTEM \nTraditional civic reporting systems rely on apps, portals, or \nhelplines that ask the users to describe the problem \nmanually, to select a department, and to type the location. \nHerein lies friction: citizens usually don't know what \nauthority manages the asset  or whether the problem has \nalready been reported. Consequently, complaints are often \nduplicated, details are incomplete, and updates remain",
+          "the user in the Q and A layer.  Instead of generic \nnotifications, the system now provides clear explanations of \nwhat is officially recorded, such as whether repair is \nscheduled or pending approval. This allows for a transparent \nreporting loop, strengthening the circle of trust by \nmaintaining information attached to the physical asset rather \nthan a portal that is further away.  \nV. COMPARISON WITH EXISTING SYSTEM \nTraditional civic reporting systems rely on apps, portals, or",
+          "the user in the Q and A layer.  Instead of generic \nnotifications, the system now provides clear explanations of \nwhat is officially recorded, such as whether repair is \nscheduled or pending approval. This allows for a transparent \nreporting loop, strengthening the circle of trust by \nmaintaining information attached to the physical asset rather \nthan a portal that is further away.  \nV. COMPARISON WITH EXISTING SYSTEM \nTraditional civic reporting systems rely on apps, portals, or"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly lists the three manual tasks a traditional civic reporting system asks users to do, exactly as stated in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q31",
+      "input": "What three checks does the verification process apply to a submitted report, according to the Workflow section?",
+      "output": {
+        "answer": "I\u2019m sorry, but the provided context does not contain the information about the three checks the verification process applies to a submitted report.",
+        "retrieved_ids": [
+          "99dde049-5b91-4d99-81c1-815b93f6b4c8",
+          "084e3190-0384-4f01-bfe5-428b42b4e505",
+          "452e8f42-f797-4b96-aa0f-4bd89ab5e8d3"
+        ],
+        "relevant_context": [
+          "create a clear loop between what exists on the ground and \nwhat is recorded. Reported issues stay visible and tied to their \nexact location, even before anyone fixes them.  \n \nB. Workflow \n \n \n \n                                   Fig.2. Workflow  \nThe workflow shown in Fig. 2 explains the complete \nfunctioning of the AR CITIZEN system from the moment \nthe user opens the application to the final verification of the \nsubmitted civic report. The process begins when the app",
+          "create a clear loop between what exists on the ground and \nwhat is recorded. Reported issues stay visible and tied to their \nexact location, even before anyone fixes them.  \n \nB. Workflow \n \n \n \n                                   Fig.2. Workflow  \nThe workflow shown in Fig. 2 explains the complete \nfunctioning of the AR CITIZEN system from the moment \nthe user opens the application to the final verification of the \nsubmitted civic report. The process begins when the app",
+          "reduces the need for repeated clarification by service \npersonnel. The submission therefore becomes not only a \nrequest but a documented record that is easily reviewable. \nD. Verification Scoring and Duplicate Management  \nThe verification layer evaluates the submission for clarity \nand alignment with stored records. If many users capture \nthe same malfunctioning light or clogged drainage within \na place and time window, those reports are merged into"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the context does not contain information about the three verification checks, directly addressing the question."
+        }
+      ]
+    },
+    {
+      "id": "q30",
+      "input": "What does the AR-CITIZEN mobile app do immediately on launching, per the Workflow section?",
+      "output": {
+        "answer": "On launch, the AR\u2011Citizen mobile app immediately activates the device\u2019s camera and captures the user\u2019s GPS coordinates and heading orientation to approximate the user\u2019s viewpoint.",
+        "retrieved_ids": [
+          "7251d2c0-0926-4d1c-a426-e40ee8cab3d7",
+          "084e3190-0384-4f01-bfe5-428b42b4e505",
+          "99dde049-5b91-4d99-81c1-815b93f6b4c8"
+        ],
+        "relevant_context": [
+          "The workflow illustrated in Fig. 3 describes the end -to-\nend functioning of the AR -CITIZEN system, from user \ninteraction to the verification and explanation of \nsubmitted civic reports.  The process begins when the \nmobile application, on launching, activates the camera \nand obtains GPS coordinates along with heading \norientation to approximate the viewpoint of the user. This \nsensing stage enables the system to automatically detect the",
+          "create a clear loop between what exists on the ground and \nwhat is recorded. Reported issues stay visible and tied to their \nexact location, even before anyone fixes them.  \n \nB. Workflow \n \n \n \n                                   Fig.2. Workflow  \nThe workflow shown in Fig. 2 explains the complete \nfunctioning of the AR CITIZEN system from the moment \nthe user opens the application to the final verification of the \nsubmitted civic report. The process begins when the app",
+          "create a clear loop between what exists on the ground and \nwhat is recorded. Reported issues stay visible and tied to their \nexact location, even before anyone fixes them.  \n \nB. Workflow \n \n \n \n                                   Fig.2. Workflow  \nThe workflow shown in Fig. 2 explains the complete \nfunctioning of the AR CITIZEN system from the moment \nthe user opens the application to the final verification of the \nsubmitted civic report. The process begins when the app"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly and completely states what the AR-CITIZEN app does immediately on launching as described in the Workflow section of the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q29",
+      "input": "What is the name given to the AI explanation component in the ICICNS2026 System Design section?",
+      "output": {
+        "answer": "The AI explanation component is called the **Retrieval\u2011Augmented LLM Explanation Module**.",
+        "retrieved_ids": [
+          "22a465fb-d1b0-4427-ad35-8fb49dda3666",
+          "7c85c2b5-0ed0-4e7e-9c0a-16ef37f737e6",
+          "84055493-95ad-4c81-ad39-2840c8271a7b"
+        ],
+        "relevant_context": [
+          "models (LLMs) has shown promise in summarizing \nstructured civic data and providing well -grounded \nexplanations for civic queries, thus improving the \ntransparency and accessibility of civic informati on [1], \n[16]. When integrated with credible civic data, explanation \nlayers powered by AI can offer intuitive and contextually \ninformed answers while addressing the problem of \npotentially spreading misinformation [17].  \nAgainst this backdrop, this paper presents AR-CITIZEN, an",
+          "reporting and clarifies ongoing civic work.  \nRetrieval-Augmented LLM Explanation Module is integrated \nto support the explanation layer.  When a user selects a \nquestion such as \u201cWhy is this streetlight still not fixed?\u201d or \n\u201cWho is responsible for this road stretch?\u201d the AI responds \nusing retrieval grounded civic records rather than speculative \nresponses. It summarizes municipal notes, ticke t status, or \nupcoming repair schedules in plain language so that any",
+          "The Patent Office Journal No. 18/2026 Dated  01/05/2026                                    49714 \n \n(12) PATENT APPLICATION PUBLICATION (21) Application No.202641047888 A \n(19) INDIA  \n(22) Date of filing of Application :15/04/2026 (43) Publication Date : 01/05/2026 \n  \n(54) Title of the invention : AI-BASED DYNAMIC RECIPE GENERATOR USING LANGUAGE MODELS \n \n  \n(51) International classification  \n:G06V \n30/10, \nG06K 9/00, \nG06V \n30/224, \nG06F \n17/28, \nG06K 9/62 \n(31) Priority Document No  :NA"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.5,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly names the AI explanation component as stated in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q28",
+      "input": "What are the box labels drawn inside the Fig. 2 System Architecture diagram (e.g. its layer names)?",
+      "output": {
+        "answer": "The provided excerpt does not include the specific box labels or layer names shown in Fig.\u202f2 of the System Architecture diagram. Therefore I cannot list them.",
+        "retrieved_ids": [
+          "3443e261-4480-42d9-b12a-05828222cabc",
+          "4af769aa-2cde-4d53-8eb2-02fb4f575a07",
+          "3ed2ea13-b8fb-4796-8297-f9641da9d7a4"
+        ],
+        "relevant_context": [
+          "4  \nA. Architectural  Diagram \n \n                 \nFig. 2. System Architecture  \n \nFig. 2 describes the system architecture of the AR CITIZEN \nplatform, beginning with the user device running the \nsmartphone-based AR application. This layer acts as the \ninitial point of interaction where the citizen simply takes \ntheir phone and sees the surrounding urban infrastructure \nthrough the camera. Rather than typing details or manually \nsearching portals, the AR interface automatically identifies",
+          "Computing Systems, pp. 301 \u2013313, 2023.  \n[6] H. Weber, T. Okafor and M. Singh, \u201cEvaluating Field Pilots of Place -\nBased Civic Applications,\u201d Proc. ACM UbiComp, pp. 311 \u2013325, \n2023.  \n[7] L. Fernandes and D. Hu, \u201cTask Completion Through Spatial AR \nLabels: A User Study,\u201d IEEE Transactions on Visualization and \nComputer Graphics, vol. 29, no. 6, pp. 2104 \u20132117, 2023.  \n[8] L. Costa, E. Martins and R. Silva, \u201cGPS and Heading Fusion for \nOutdoor AR Localization,\u201d IEEE Transactions on Mobile",
+          "Computing Systems, pp. 301 \u2013313, 2023.  \n[6] H. Weber, T. Okafor and M. Singh, \u201cEvaluating Field Pilots of Place -\nBased Civic Applications,\u201d Proc. ACM UbiComp, pp. 311 \u2013325, \n2023.  \n[7] L. Fernandes and D. Hu, \u201cTask Completion Through Spatial AR \nLabels: A User Study,\u201d IEEE Transactions on Visualization and \nComputer Graphics, vol. 29, no. 6, pp. 2104 \u20132117, 2023.  \n[8] L. Costa, E. Martins and R. Silva, \u201cGPS and Heading Fusion for \nOutdoor AR Localization,\u201d IEEE Transactions on Mobile"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "retrieval_no_ground_truth",
+          "value": true,
+          "comment": "No expected_chunk_ids for this question (trap/no-context question) -- excluded from precision/recall/MRR aggregates by design."
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by stating that the retrieved context does not contain the requested box labels or layer names from Fig. 2."
+        }
+      ]
+    },
+    {
+      "id": "q27",
+      "input": "What five elements make up the Conceptual Interaction Loop shown in Fig. 1 of the ICICNS2026 submission?",
+      "output": {
+        "answer": "The Conceptual Interaction Loop depicted in Fig.\u202f1 of the ICICNS2026 submission is composed of the following five elements:\n\n1. **Physical civic assets** \u2013 the real\u2011world infrastructure or objects that the system engages with.  \n2. **AR visualization** \u2013 augmented\u2011reality overlays that render information onto the physical assets.  \n3. **Citizen interaction** \u2013 the actions and feedback provided by users interacting with the AR experience.  \n4. **Civic data services** \u2013 the backend systems that store, process, and retrieve civic data.  \n5. **AI\u2011driven explanations** \u2013 algorithmic interpretations and contextual insights that accompany the data and visuals.\n\nThese five components together form the continuous, transparent reporting cycle of the conceptual interaction loop.",
+        "retrieved_ids": [
+          "986d2ac0-770f-4f36-838e-2828c1201948",
+          "bd1ec322-f8d0-4725-bb89-a8653258a928",
+          "b5380121-8714-4ed8-b3ad-6191c7db7b29"
+        ],
+        "relevant_context": [
+          "ticket is closed. Citizens witness completion in real space \nrather than relying on mailed acknowledgements or expired \ntracking numbers . \n \n                    Fig. 1. Conceptual Interaction Loo p \nThe conceptual interaction loop summarizing these modules \nis illustrated in Fig. 1, where physical civic assets, AR \nvisualization, citizen interaction, civic data services, and AI-\ndriven explanations form a continuous transparent reporting",
+          "cycle. The described modules collectively form a continuous \ninteraction cycle in which real-world civic assets, augmented \nreality visualization, citizen interaction, backend civic data \nservices, and AI -driven explanations operate in a unified \nmanner. By maintaining this closed loop, the system ensures \nthat civic information remains spatially anchored to the \nphysical environment while supporting accurate reporting, \nverification, and transparent status reflection. The overall",
+          "Governance Conference, pp. 88 \u201399, 2024.  \n[3] A. Mehta and S. Varma, \u201cUrban Interaction Systems Through Spati al \nInterfaces,\u201d IEEE Transactions on Human -Machine Systems, vol. 54, \nno. 2, pp. 145 \u2013160, 2024.  \n[4] R. Azuma, \u201cAdvances in Contextual Augmented Reality for City \nInfrastructure,\u201d Proc. IEEE Mixed Reality Forum, pp. 101 \u2013112, \n2023.  \n[5] R. Singh, A. Kapoor and T. Shah, \u201cOutdoor AR Usability for Public \nInformation Systems,\u201d ACM CHI Conference on Human Factors i n"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.6666666666666666,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly lists the five elements of the Conceptual Interaction Loop as described in the retrieved context, fully addressing the user's question."
+        }
+      ]
+    },
+    {
+      "id": "q26",
+      "input": "What does the AR Based Identification and Visual Capture module extract from poles, electric plates, or sign boards?",
+      "output": {
+        "answer": "The AR Based Identification and Visual Capture module extracts **any readable labels (optical text)** from poles, electric plates, or sign boards.",
+        "retrieved_ids": [
+          "26eb9fce-2d36-4e82-a18c-a3924215c836",
+          "6a5e4a86-be27-4f2d-983f-1a800a809d39",
+          "9bd8582e-957d-45a7-8d19-f884b5d790ba"
+        ],
+        "relevant_context": [
+          "ensuring that civic reporting remains precise and \naccountable . \nA. AR Based Identification and Visual Capture  \nThe system begins by interpreting the world through the \ncamera view. Device senses the orientation and location of the \nasset and extracts any readable labels on poles, electric plates, \nor sign boards. Optical text interpretation helps confirm asset \nidentity when multiple similar units are positioned closely. \nEven when printed text is missing, the direction of view and",
+          "ensuring that civic reporting remains precise and \naccountable . \nA. AR Based Identification and Visual Capture  \nThe system begins by interpreting the world through the \ncamera view. Device senses the orientation and location of the \nasset and extracts any readable labels on poles, electric plates, \nor sign boards. Optical text interpretation helps confirm asset \nidentity when multiple similar units are positioned closely. \nEven when printed text is missing, the direction of view and",
+          "interface. By adding visual detection and structured service \nrecords, AR CITIZEN delivers clear status visibility while \nensuring that civic reporting remains precise and \naccountable . \nA. AR Based Identification and Visual Capture  \nThe system begins by interpreting the world through the \ncamera view. Device senses the orientation and location of the \nasset and extracts any readable labels on poles, electric plates, \nor sign boards. Optical text interpretation helps confirm asset"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly states what the AR Based Identification and Visual Capture module extracts from poles, electric plates, or sign boards, exactly as described in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q25",
+      "input": "What four topics does the Literature Review section of the ICICNS2026 paper say it reviews?",
+      "output": {
+        "answer": "I\u2019m sorry, but the provided context does not contain any information about the four topics reviewed in the Literature Review section of the ICICNS2026 paper, so I can\u2019t give an answer based on the text shown.",
+        "retrieved_ids": [
+          "e1b71a72-8200-4575-be76-1b4bd713b804",
+          "bd375f1b-a022-48a9-b19d-77aaa2e3c6cb",
+          "707957c5-6f11-4eb9-ab35-f1f8f807a461"
+        ],
+        "relevant_context": [
+          "[18] D. Ortega, F. Silva and C. Menezes, \u201cPrivacy -Preserving Medi a \nHandling in Civic Applications,\u201d IEEE Transactions on Informati on \nForensics and Security, vol. 18, no. 1, pp. 144 \u2013156, 2023.  \n[19] K. Sharma and V. Arul, \u201cAnonymization and Consent in Smart City \nVideo Submissions,\u201d IEEE Consumer Communications & \nNetworking Conference, pp. 500 \u2013510, 2022.  \n[20] Y. Chen and S. Romano, \u201cEnergy and Performance Optimization for",
+          "[18] D. Ortega, F. Silva and C. Menezes, \u201cPrivacy -Preserving Medi a \nHandling in Civic Applications,\u201d IEEE Transactions on Informati on \nForensics and Security, vol. 18, no. 1, pp. 144 \u2013156, 2023.  \n[19] K. Sharma and V. Arul, \u201cAnonymization and Consent in Smart City \nVideo Submissions,\u201d IEEE Consumer Communications & \nNetworking Conference, pp. 500 \u2013510, 2022.  \n[20] Y. Chen and S. Romano, \u201cEnergy and Performance Optimization for",
+          "[18] D. Ortega, F. Silva and C. Menezes, \u201cPrivacy -Preserving Medi a \nHandling in Civic Applications,\u201d IEEE Transactions on Informati on \nForensics and Security, vol. 18, no. 1, pp. 144 \u2013156, 2023.  \n[19] K. Sharma and V. Arul, \u201cAnonymization and Consent in Smart City \nVideo Submissions,\u201d IEEE Consumer Communications & Networking \nConference, pp. 500 \u2013510, 2022.  \n[20] Y. Chen and S. Romano, \u201cEnergy and Performance Optimization for"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the retrieved context does not contain information about the four topics reviewed in the Literature Review section, directly addressing the question based on the given context."
+        }
+      ]
+    },
+    {
+      "id": "q24",
+      "input": "According to the ICICNS2026 introduction, what recent technological developments create the opportunity to close the gap between citizens and urban infrastructure?",
+      "output": {
+        "answer": "According to the ICICNS2026 introduction, the recent technological developments that create the opportunity to close the gap between citizens and urban infrastructure are:\n\n- **Augmented Reality (AR)**\n- **Computer Vision**\n- **Geolocation / Spatial Computing**\n- **Large Language Models (LLMs)**  \n\nThese technologies, together with civic\u2011engagement and crowdsourced reporting frameworks, enable more direct, real\u2011time interaction and transparency between residents and city systems.",
+        "retrieved_ids": [
+          "f1978a40-2b07-472c-aeb0-16f4c86a6c05",
+          "483af491-06b7-4e30-ae87-604aaaaf1611",
+          "fcd68287-d7ab-454b-b1d5-43abe43ffcf2"
+        ],
+        "relevant_context": [
+          "The goal is to reduce reporting friction, improve transparency, \nand build shared civic memory.  \nKeywords \u2014 Augmented Reality  (AR), Computer Vision, \nGeolocation/Spatial Computing, Large Language Models \n(LLMs), Civic Engagement, Crowdsourced Reporting, Urban \nInformatics. \nI. INTRODUCTION \nIn cities, thousands of everyday public systems including \nroads we travel, streetlights that guide us at night, parks \nwe gather in, bus stops we wait at, and buildings we rely",
+          "The goal is to reduce reporting friction, improve transparency, \nand build shared civic memory.  \nKeywords \u2014 Augmented Reality  (AR), Computer Vision, \nGeolocation/Spatial Computing, Large Language Models \n(LLMs), Civic Engagement, Crowdsourced Reporting, Urban \nInformatics. \nI. INTRODUCTION \nIn cities, thousands of everyday public systems including \nroads we travel, streetlights that guide us at night, parks \nwe gather in, bus stops we wait at, and buildings we rely",
+          "a clear, visible exchange between residents and city \nworkers, replacing confusion with accurate, confirmed \ninformation.  \n \nFig.3. Performance Metrics  \n \nVII.  FUTURE SCOPE OF THE PROJECT \nAR CITIZEN can evolve into an urban interaction layer \nwhere a city\u2019s infrastructure, services, and citizen \nengagement operate through a single connected platform. \nPredictive maintenance using machine learning models to \nanticipate the failure of assets and reduce repair delays and"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly lists the technological developments mentioned in the introduction and explains their role in closing the gap between citizens and urban infrastructure, fully addressing the question."
+        }
+      ]
+    },
+    {
+      "id": "q23",
+      "input": "What is the keyword list at the top of the ICICNS2026 submission labeled?",
+      "output": {
+        "answer": "The provided context does not contain any information about an ICICNS2026 submission or a keyword list.",
+        "retrieved_ids": [
+          "1c6d04c8-70ae-487c-9178-ff992005f8ec",
+          "e35996a7-7308-4188-854a-d83ac937910a",
+          "84055493-95ad-4c81-ad39-2840c8271a7b"
+        ],
+        "relevant_context": [
+          "EDUCATION \nSathyabama Institute Of Science and Technology  10/2022 - 06/2026 \nB.E - CS with AI/ML Specialization - CGPA - 7.82 Chennai, Tamil Nadu \nPROJECTS \nNLP ML Pipeline \u2013 End-to-End Text Classification System  \n\u2022 Built an end -to-end ML pipeline for spam detection on an imbalanced dataset (5,500+ samples), covering preprocessing, \nfeature engineering, training, and evaluation.",
+          "2021.  \n[15] A. Gupta and R. Dias, \u201cLightweight AR Tagging Systems for Urban \nCommunication,\u201d Proc. IEEE ISMAR Workshops, pp. 245 \u2013254, 2021.  \n[16] F. Silva and C. Montes, \u201cRAG Models for Civic Data Summarization,\u201d \nProc. ACM Intelligent User Interfaces, pp. 199\u2013210, 2021.  \n[17] J. Edwards and P. Lee, \u201cGrounding and Hallucination Control in \nGovernment -Linked LLM Responses,\u201d IEEE Transactions on \nInformation Theory, vol. 67, no. 9, pp. 6120 \u20136135, 2021.",
+          "The Patent Office Journal No. 18/2026 Dated  01/05/2026                                    49714 \n \n(12) PATENT APPLICATION PUBLICATION (21) Application No.202641047888 A \n(19) INDIA  \n(22) Date of filing of Application :15/04/2026 (43) Publication Date : 01/05/2026 \n  \n(54) Title of the invention : AI-BASED DYNAMIC RECIPE GENERATOR USING LANGUAGE MODELS \n \n  \n(51) International classification  \n:G06V \n30/10, \nG06K 9/00, \nG06V \n30/224, \nG06F \n17/28, \nG06K 9/62 \n(31) Priority Document No  :NA"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the context does not contain any information about the ICICNS2026 submission or a keyword list, directly addressing the question."
+        }
+      ]
+    },
+    {
+      "id": "q22",
+      "input": "What examples of contemporary urban public infrastructure does the ICICNS2026 introduction list?",
+      "output": {
+        "answer": "The introduction lists the following examples of contemporary urban public infrastructure:\n\n- Road networks  \n- Lighting (e.g., streetlights)  \n- Green spaces (e.g., parks, gardens)  \n- Transportation shelters (e.g., bus stops, shelters)  \n- Public buildings (e.g., municipal offices, community centers)",
+        "retrieved_ids": [
+          "b4759489-81de-4672-82ff-d15483dfdd1d",
+          "2ead6fb3-1105-4051-984a-4295efe62742",
+          "f01e53be-9244-4ece-adb1-e635e420f954"
+        ],
+        "relevant_context": [
+          "build shared civic memory.  \nIndex Terms \u2014Augmented Reality (AR), Computer \nVision, Geolocation/Spatial Computing, Large Language \nModels (LLMs), Civic Engagement, Crowdsourced \nReporting, Urban Informatics.  \nI. INTRODUCTION \nContemporary urban space relies on a wide range of \npublic infrastructure assets , such as road networks, \nlighting, green spaces, transportation shelters, and public \nbuildings, which directly influence the everyday lives of",
+          "civic information directly to the physical environment.  \nII. LITERATURE REVIEW \nThis section reviews recent studies on AR -based civic \ninteraction systems, OCR -enabled infrastructure \nidentification, crowdsourced civic reporting platforms, and \nretrieval-augmented AI explanations for public service \ntransparency. Smart city complaint systems have attempted \nto modernize infrastructure reporting yet most still depend \non portals helplines and map -based forms that separate",
+          "Department of Computer  Science and \nEngineering (Artificial Intelligence \nand Machine Learning) , \nSathyabama  Institute of Science and \nTechnology,  \nChennai,  India \nabhijeethpandey2@gmail.com  naziaavesh2003@gmail.com  soniajeniferrayen.cse@sathyabama.ac.in  \n \n \n \nAbstract\u2014Urban residents often lack timely, site-specific \ninformation about public assets such as roads, streetlights, \nand parks. Existing portals and apps are detached from the"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly lists the examples of contemporary urban public infrastructure explicitly mentioned in the introduction section of the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q21",
+      "input": "In the ICICNS2026 submission, what title is given to Sonia Jenifer Rayen?",
+      "output": {
+        "answer": "In the ICICNS2026 submission, Sonia\u202fJenifer\u202fRayen is listed with the title **\u201cDr.\u201d**",
+        "retrieved_ids": [
+          "dbb46c45-669d-42e6-b414-50fca67edda8",
+          "c9990eb3-03b2-4c78-8a75-ae4c8f7aa97f",
+          "92eea572-0585-4f64-b694-64193cac9775"
+        ],
+        "relevant_context": [
+          "Sathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nAssociate Professor, Department of \nComputer  Science and Engineering \nArtificial Intelligence  and Machine \nLearning,  \nSathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nabhijeethpandey2@gmail.com  naziaavesh2003@gmail.com  soniajeniferrayen.cse@sathyabama.ac.in  \n \n \n \nAbstract\u2014 Urban residents often lack timely, site -specific \ninformation about public assets such as roads, streetlights, and",
+          "Sathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nAssociate Professor, Department of \nComputer  Science and Engineering \nArtificial Intelligence  and Machine \nLearning,  \nSathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nabhijeethpandey2@gmail.com  naziaavesh2003@gmail.com  soniajeniferrayen.cse@sathyabama.ac.in  \n \n \n \nAbstract\u2014 Urban residents often lack timely, site -specific \ninformation about public assets such as roads, streetlights, and",
+          "1  \nAR-CITIZEN: AI-POWERED AR CIVIC          \nENGAGEMENT PLATFORM \n \nAbhijeeth Pandey Aavesh Khan Dr. Sonia Jenifer Rayen  \nStudent, Department  of Computer Science \nand Engineering  \nwith specialization  in Artificial \nIntelligence and Machine Learning , \nSathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nStudent, Department  of Computer  Science \nand Engineering  \nwith specialization  in Artificial \nIntelligence and Machine Learning, \nSathyabama  Institute of Science  and"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 0.0,
+          "comment": "unsupported_claims=['Sonia\\u202fJenifer\\u202fRayen is listed with the title \u201cDr.\u201d']"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by stating the title given to Sonia Jenifer Rayen in the ICICNS2026 submission."
+        }
+      ]
+    },
+    {
+      "id": "q20",
+      "input": "What is Section VI titled in the ICICNS2026 submission, and what is different about it compared to the other uploaded AR-CITIZEN paper?",
+      "output": {
+        "answer": "I\u2019m sorry, but the information you\u2019re asking for isn\u2019t in the provided context, so I can\u2019t give you the section title or explain how it differs from the other version.",
+        "retrieved_ids": [
+          "7c90921b-913d-4742-ba41-a5cfb12149df",
+          "4c2ec422-0080-41f3-8a12-83411a63cb39",
+          "91c08254-1c80-41a6-a225-3662a65f628a"
+        ],
+        "relevant_context": [
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a",
+          "5  \nalready been reported. Consequently, complaints are \noften duplicated, details are incomplete, and updates \nremain unclear. Users report issues but hardly get any \nmeaningful feedback or visual confirmation. This \nweakens trust and reduces long term participat ion. The \nproposed system, AR CITIZEN, removes this gap by \ndirectly linking reporting to the asset in question. Instead \nof filling out forms, the user points his phone against a",
+          "structural organization of these compone nts is presented in \nthe architectural diagram that follows.  \nIV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the requested information is not present in the provided context, directly addressing the user's question."
+        }
+      ]
+    },
+    {
+      "id": "q19",
+      "input": "What programming language or framework is used to implement AR-CITIZEN's backend server code?",
+      "output": {
+        "answer": "The provided context does not specify which programming language or framework is used to implement AR\u2011CITIZEN\u2019s backend server code.",
+        "retrieved_ids": [
+          "f44f5898-7d7e-4a7a-8617-b41431a59346",
+          "1e37eaba-1801-4f2b-8d65-be83b0bf35a8",
+          "4cf23a66-b198-41f9-9948-fe5db0b39aea"
+        ],
+        "relevant_context": [
+          "This careful visual grounding improves reliability and gives \ncitizens confidence that what they see in the interface \nmatches exactly what is in front of them. The AR interface \nthen communicates with the backend server through \nsecured APIs. The backend functions as the central \nprocessing unit that fetches stored civic metadata including \nasset ownership department, prior service actions, pending \ncomplaints, inspection records, contractor notes, and repair",
+          "This careful visual grounding improves reliability and gives \ncitizens confidence that what they see in the interface \nmatches exactly what is in front of them. The AR interface \nthen communicates with the backend server through \nsecured APIs. The backend functions as the central \nprocessing unit that fetches stored civic metadata including \nasset ownership department, prior service actions, pending \ncomplaints, inspection records, contractor notes, and repair",
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "retrieval_no_ground_truth",
+          "value": true,
+          "comment": "No expected_chunk_ids for this question (trap/no-context question) -- excluded from precision/recall/MRR aggregates by design."
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by stating that the retrieved context does not specify the programming language or framework used for the backend server."
+        }
+      ]
+    },
+    {
+      "id": "q18",
+      "input": "According to the conclusion, what can a citizen do with their smartphone using AR-CITIZEN?",
+      "output": {
+        "answer": "I\u2019m sorry, but the provided context doesn\u2019t include the conclusion, so I can\u2019t determine what the conclusion says about a citizen\u2019s use of their smartphone with AR\u2011CITIZEN.",
+        "retrieved_ids": [
+          "b2836f1e-8418-4475-8d0f-33de85ff33a2",
+          "f5250e80-b528-4368-9e8f-389e8c0fa61f",
+          "b6d99b56-bf13-4ea7-b14e-73d7a49ca921"
+        ],
+        "relevant_context": [
+          "III.  PROPOSED SYSTEM \n \nThe proposed system introduces AR CITIZEN, an \naugmented reality civic interface that transforms the \nsmartphone into a real time public information lens. Citizens \nno longer need to rely on detached reporting platforms or \nmanual complaint forms. Instead, by simply pointing the \ncamera at a public asset such as a streetlight, damaged \npavement, bus stop, park seating, or signage post, the user \nreceives accurate and context bound maintenance details in",
+          "III.  PROPOSED SYSTEM \n \nThe proposed system introduces AR CITIZEN, an \naugmented reality civic interface that transforms the \nsmartphone into a real time public information lens. Citizens \nno longer need to rely on detached reporting platforms or \nmanual complaint forms. Instead, by simply pointing the \ncamera at a public asset such as a streetlight, damaged \npavement, bus stop, park seating, or signage post, the user \nreceives accurate and context bound maintenance details in",
+          "evidence preventing duplicates and making resolution \nprogress visible in real space . \nIII.  PROPOSED SYSTEM \n \nThe proposed system introduces AR CITIZEN, an \naugmented reality civic interface that transforms the \nsmartphone into a real time public information lens. Citizens \nno longer need to rely on detached reporting platforms or \nmanual complaint forms. Instead, by simply pointing the \ncamera at a public asset such as a streetlight, damaged"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the conclusion is not included in the provided context and therefore does not attempt to answer beyond the given information."
+        }
+      ]
+    },
+    {
+      "id": "q17",
+      "input": "What predictive capability does the Future Scope section propose adding?",
+      "output": {
+        "answer": "The Future Scope section proposes adding **predictive maintenance**\u2014using machine\u2011learning models to anticipate when city assets may fail and thereby reduce repair delays.",
+        "retrieved_ids": [
+          "fcd68287-d7ab-454b-b1d5-43abe43ffcf2",
+          "611ca596-9e6b-4d2a-ab33-8b569a6a3ef5",
+          "92141ae3-e81f-443e-8377-e7629925c600"
+        ],
+        "relevant_context": [
+          "a clear, visible exchange between residents and city \nworkers, replacing confusion with accurate, confirmed \ninformation.  \n \nFig.3. Performance Metrics  \n \nVII.  FUTURE SCOPE OF THE PROJECT \nAR CITIZEN can evolve into an urban interaction layer \nwhere a city\u2019s infrastructure, services, and citizen \nengagement operate through a single connected platform. \nPredictive maintenance using machine learning models to \nanticipate the failure of assets and reduce repair delays and",
+          "a clear, visible exchange between residents and city \nworkers, replacing confusion with accurate, confirmed \ninformation.  \n \nFig.3. Performance Metrics  \n \nVII.  FUTURE SCOPE OF THE PROJECT \nAR CITIZEN can evolve into an urban interaction layer \nwhere a city\u2019s infrastructure, services, and citizen \nengagement operate through a single connected platform. \nPredictive maintenance using machine learning models to \nanticipate the failure of assets and reduce repair delays and",
+          "been implemented on a large scale in the real world, as the \nsystem is still in the design prototype phase. Future work \nwill focus on building a functional mobile prototype, \nevaluating the system through controlled user studies, and \nanalyzing reporting accuracy, latency, and trust \nimprovements in various urban settings. Other potential \nresearch areas include the use of predictive analytics for \nmunicipal maintenance, real -time municipal dashboard"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.5,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly and accurately summarizes the predictive capability proposed in the Future Scope section as given in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q16",
+      "input": "What is the performance data in the Results section based on?",
+      "output": {
+        "answer": "The performance figures in the Results section are based on a before\u2011and\u2011after comparison of the asset\u2011management process after the AR\u2011labeling system was introduced.  \n\n* **Grouping accuracy** was measured by looking at how many duplicate repair tickets were correctly merged. Before AR labels the system only grouped 32\u202f% of related tickets, and after the implementation this rose to 78\u202f%.  \n\n* **Speed** was measured by the percentage of tickets that were fully actionable (having location, photos, timestamps, and asset numbers) the moment they were created. The speed metric jumped from 40\u202f% before the AR solution to 81\u202f% afterward.  \n\nSo the percentages reflect the operational performance improvements\u2014reduced duplication and faster ticket handling\u2014attributable to the AR labels that flag assets, supply full contextual data, and enable teams to focus on real repairs rather than sorting duplicates.",
+        "retrieved_ids": [
+          "5b55ca6b-3372-4c15-b1f5-35c227fea54b",
+          "1f256189-2873-4b00-9b49-6a9cca87e1c0",
+          "634b96ee-d684-4c24-aa27-b3f0c5b7cf52"
+        ],
+        "relevant_context": [
+          "with no visibility of existing tickets. AR labels appear \nover the asset in view, showing if it is already flagged. \nGrouping accuracy rises from 32% to 78%. Queues stay \nclean and teams focus on real repairs instead of sorting \nduplicates. Approval moves faster as well. Speed rises \nfrom 40% to 81% because each ticket arrives with \nlocation, photos, timestamps, and asset numbers from the \nstart. Nothing is missing. Field teams receive clear info",
+          "with no visibility of existing tickets. AR labels appear \nover the asset in view, showing if it is already flagged. \nGrouping accuracy rises from 32% to 78%. Queues stay \nclean and teams focus on real repairs instead of sorting \nduplicates. Approval moves faster as well. Speed rises \nfrom 40% to 81% because each ticket arrives with \nlocation, photos, timestamps, and asset numbers from the \nstart. Nothing is missing. Field teams receive clear info",
+          "a place and time window, those reports are merged into \none record rather than trea ted as duplicates. Confidence \nscoring considers visibility, image quality, text match \npresence, and consistency of location. This reduces \nredundant entries while still preserving citizen \ncontribution. Submissions that fall below a defined \ncertainty threshold can be scheduled for inspection rather \nthan direct forwarding. This controlled flow confirms \nthat the civic authorities receive concise and accurate"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 0.9,
+          "comment": "unsupported_claims=['The performance figures in the Results section are based on a before\u2011and\u2011after comparison of the asset\u2011management process after the AR\u2011labeling system was introduced.', 'Speed was measured by the percentage of tickets that were fully actionable (having location, photos, timestamps, and asset numbers) the moment they were created.']"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly explains what the performance data in the Results section is based on, using the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "input": "What were the reported improvements in citizen confidence and progress visibility?",
+      "output": {
+        "answer": "The study reported that:\n\n- **Citizen confidence** increased from **35\u202f% to 87\u202f%**.  \n- **Progress visibility** improved from **29\u202f% to 76\u202f%**.",
+        "retrieved_ids": [
+          "32baae83-9aa1-4c4d-bf6d-e5ab03743d54",
+          "86b9eea2-dc7d-4dfb-b791-7846935f6f40",
+          "b5abe82e-be86-4c94-a781-51d67dd4dbf9"
+        ],
+        "relevant_context": [
+          "before they step out the door. Record accuracy also rises \nfrom 46% to 84%, giving teams reliable context on site. \nResidents gain trust too. Confidence rises from 35% to \n87% because people see the asset\u2019s current condition and \nits repair history without jumping between portals. \nProgress visibility improves from 29% to 76%, so users \ncan follow the life of their report instead of waiting \nwithout updates. AR CITIZEN turns civic reporting into",
+          "before they step out the door. Record accuracy also rises \nfrom 46% to 84%, giving teams reliable context on site. \nResidents gain trust too. Confidence rises from 35% to \n87% because people see the asset\u2019s current condition and \nits repair history without jumping between portals. \nProgress visibility improves from 29% to 76%, so users \ncan follow the life of their report instead of waiting \nwithout updates. AR CITIZEN turns civic reporting into",
+          "opposite: unlike existing systems, which feel so distant \nand bureaucratic, it makes reporting immediate, \ntransparent, and spatial, creating more confident and \ntrusted interaction among citizens with civic \ninfrastructure . \nVI.  RESULTS AND DISCUSSIONS \nAR CITIZEN shows clear gains across all reporting \nmeasures. Performance metrics reflect a pilot dataset of \nmunicipal assets within a designated test ward during live \nAR reporting trials.  Accuracy, speed, clarity, and asset"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly and accurately reports the improvements in citizen confidence and progress visibility as stated in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "input": "How much did approval/verification speed improve, and why?",
+      "output": {
+        "answer": "Approval/verification speed jumped from **40\u202f% to 81\u202f%** \u2013 a **41\u2011point increase**.  \nThis improvement happens because every ticket arrives already equipped with the full context (location, photos, timestamps, and asset numbers), so nothing is missing and the team can move straight to approval.",
+        "retrieved_ids": [
+          "1f256189-2873-4b00-9b49-6a9cca87e1c0",
+          "5b55ca6b-3372-4c15-b1f5-35c227fea54b",
+          "86b9eea2-dc7d-4dfb-b791-7846935f6f40"
+        ],
+        "relevant_context": [
+          "with no visibility of existing tickets. AR labels appear \nover the asset in view, showing if it is already flagged. \nGrouping accuracy rises from 32% to 78%. Queues stay \nclean and teams focus on real repairs instead of sorting \nduplicates. Approval moves faster as well. Speed rises \nfrom 40% to 81% because each ticket arrives with \nlocation, photos, timestamps, and asset numbers from the \nstart. Nothing is missing. Field teams receive clear info",
+          "with no visibility of existing tickets. AR labels appear \nover the asset in view, showing if it is already flagged. \nGrouping accuracy rises from 32% to 78%. Queues stay \nclean and teams focus on real repairs instead of sorting \nduplicates. Approval moves faster as well. Speed rises \nfrom 40% to 81% because each ticket arrives with \nlocation, photos, timestamps, and asset numbers from the \nstart. Nothing is missing. Field teams receive clear info",
+          "before they step out the door. Record accuracy also rises \nfrom 46% to 84%, giving teams reliable context on site. \nResidents gain trust too. Confidence rises from 35% to \n87% because people see the asset\u2019s current condition and \nits repair history without jumping between portals. \nProgress visibility improves from 29% to 76%, so users \ncan follow the life of their report instead of waiting \nwithout updates. AR CITIZEN turns civic reporting into"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly states the improvement in approval speed and the reason for it exactly as described in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "input": "What was the improvement in duplicate-report grouping accuracy?",
+      "output": {
+        "answer": "The context provided does not contain a specific figure or statement about the improvement in duplicate\u2011report grouping accuracy, so I can't provide that information.",
+        "retrieved_ids": [
+          "c49f698e-ed42-4249-a339-ecb21bd1b0eb",
+          "76b30d37-e5a9-4d71-be49-ffe27fe46fda",
+          "62505ee0-a0b1-49ee-ac78-6f1e7294266b"
+        ],
+        "relevant_context": [
+          "international deployments. Participation rises when \npeople can track whether an issue is pending assigned or \nresolved and it declines when feedback is vague hidden \ndelayed or not publicly visible [12]. Duplicate reports \nremain common in city platforms that rely only on map \npins for identification. Research proposes grouping  \nreports in clusters and assigning confidence based on \nvisual clarity GPS match and independent confirmations \nfrom multiple reporters [13] [14] [15]. These models",
+          "international deployments. Participation rises when \npeople can track whether an issue is pending assigned or \nresolved and it declines when feedback is vague hidden \ndelayed or not publicly visible [12]. Duplicate reports \nremain common in city platforms that rely only on map \npins for identification. Research proposes grouping  \nreports in clusters and assigning confidence based on \nvisual clarity GPS match and independent confirmations \nfrom multiple reporters [13] [14] [15]. These models",
+          "estimation [11].  Civic reporting platforms show \nconsistent patterns across international deployments. \nParticipation rises when people can track whether an \nissue is pending assigned or resolved and it declines when \nfeedback is vague hidden delayed or not publicly visible \n[12]. Duplicate reports remain common in city platforms \nthat rely only on map pins for i dentification. Research \nproposes grouping reports in clusters and assigning \nconfidence based on visual clarity GPS match and"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the context does not provide any specific figure or statement about the improvement in duplicate-report grouping accuracy, directly addressing the user's question."
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "input": "By how much did asset detection accuracy improve according to the Results section?",
+      "output": {
+        "answer": "I\u2019m sorry, but the context provided does not contain any information about the improvement in asset detection accuracy.",
+        "retrieved_ids": [
+          "83f04c8f-46d2-422e-a063-8ead7f53fb7e",
+          "921543ad-cd21-4b08-b4d1-6ac0f3424398",
+          "37391123-ffc3-4800-bd13-f2b89374d582"
+        ],
+        "relevant_context": [
+          "expected to minimize  incorrect asset identification and",
+          "Recognition of pole identifiers and street signage further \nimproves asset matching especially when geospatial \ncoordinates overlap or confuse the detection system [9] \n[10]. Studies also note that when the interface guides \nusers to capture clear label frames verification success \nincreases s ignificantly because the system relies on \nlegible text rather than uncertain spatial estimation [11]. \nCivic reporting platforms show consistent patterns across",
+          "Recognition of pole identifiers and street signage further \nimproves asset matching especially when geospatial \ncoordinates overlap or confuse the detection system [9] \n[10]. Studies also note that when the interface guides \nusers to capture clear label frames verification success \nincreases s ignificantly because the system relies on \nlegible text rather than uncertain spatial estimation [11]. \nCivic reporting platforms show consistent patterns across"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the context does not contain information about the improvement in asset detection accuracy, directly addressing the user's question."
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "input": "What does cloud anchor support enable for fixed public assets?",
+      "output": {
+        "answer": "Cloud anchor support gives fixed public assets **spatial persistence** \u2013 the AR overlay stays anchored to the physical location, so when you return to that spot the overlay appears automatically without needing to recalibrate or re\u2011detect the environment.",
+        "retrieved_ids": [
+          "8f9c6e01-b6f7-4670-b46b-4b3193a67f73",
+          "c75af33d-7a30-4f88-af09-9241d0da4150",
+          "dd457f72-f15d-4a09-a7c3-67661c62b4e4"
+        ],
+        "relevant_context": [
+          "not invent information but only translates verified data into \nconcise explanations. Cloud anchor support enables spatial \npersistence for fixed public assets. When a location is \nrevisited, the AR overlay appears without recalibration or \nre detection. Over time , this turns physical spaces into \nliving civic dashboards where information remains tied to \ninfrastructure. A street corner with recurring pothole \nreports or a bus stop with repeated lighting complaints will",
+          "not invent information but only translates verified data into \nconcise explanations. Cloud anchor support enables spatial \npersistence for fixed public assets. When a location is \nrevisited, the AR overlay appears without recalibration or \nre detection. Over time , this turns physical spaces into \nliving civic dashboards where information remains tied to \ninfrastructure. A street corner with recurring pothole \nreports or a bus stop with repeated lighting complaints will",
+          "citizen regardless of technical familiarity can understand. \nThis grounded Q and A reinforces trust because the system \ndoes not invent information but only translates verified data \ninto co ncise explanations. Cloud anchor support enables \nspatial persistence for fixed public assets. When a location is \nrevisited, the AR overlay appears without recalibration or re-\ndetection. Over time, this turns physical spaces into living \ncivic dashboards where information remains tied to"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 1.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly explains what cloud anchor support enables for fixed public assets, fully based on the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "input": "What example questions does the paper give for the Generative AI explanation layer?",
+      "output": {
+        "answer": "The paper cites these two example questions for the Generative AI explanation layer:  \n\n1. **\u201cWhy is this streetlight still not fixed?\u201d**  \n2. **\u201cWho is responsible for this road stretch?\u201d**",
+        "retrieved_ids": [
+          "22a465fb-d1b0-4427-ad35-8fb49dda3666",
+          "137c0645-f049-4c31-bcf7-333ec313919d",
+          "7c85c2b5-0ed0-4e7e-9c0a-16ef37f737e6"
+        ],
+        "relevant_context": [
+          "models (LLMs) has shown promise in summarizing \nstructured civic data and providing well -grounded \nexplanations for civic queries, thus improving the \ntransparency and accessibility of civic informati on [1], \n[16]. When integrated with credible civic data, explanation \nlayers powered by AI can offer intuitive and contextually \ninformed answers while addressing the problem of \npotentially spreading misinformation [17].  \nAgainst this backdrop, this paper presents AR-CITIZEN, an",
+          "feature engineering, training, and evaluation.   \n\u2022 Implemented TF -IDF and classical ML models, achieving 0.91 precision, 0.91 recall, and 0.91 F1 -score, with detailed error \nanalysis using confusion matrices . \nRAG Document Assistant \u2013 Context-Aware AI Q&A System \n\u2022 Developed a Retrieval-Augmented Generation (RAG) system for semantic search and question answering over PDF \ndocuments.",
+          "reporting and clarifies ongoing civic work.  \nRetrieval-Augmented LLM Explanation Module is integrated \nto support the explanation layer.  When a user selects a \nquestion such as \u201cWhy is this streetlight still not fixed?\u201d or \n\u201cWho is responsible for this road stretch?\u201d the AI responds \nusing retrieval grounded civic records rather than speculative \nresponses. It summarizes municipal notes, ticke t status, or \nupcoming repair schedules in plain language so that any"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly quotes the two example questions given in the retrieved context for the Generative AI explanation layer."
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "input": "How does AR-CITIZEN help cities find the root cause behind recurring failures like drainage or wiring issues?",
+      "output": {
+        "answer": "AR\u2011CITIZEN links every complaint to its exact physical spot and automatically verifies that location and the surrounding context before the data reaches city officials. Because the system also overlays maintenance history, existing open complaints, and the departments responsible for a piece of infrastructure right in the user\u2019s view, city workers receive a complete, verifiable record for each incident. This context\u2011rich, location\u2011anchored data lets analysts see patterns of repeated failures\u2014such as drainage blockages or wiring faults\u2014at specific sites, trace them back to the underlying cause, and prioritize corrective action.",
+        "retrieved_ids": [
+          "bd865b00-a6e7-4b5c-b447-a997b60a74b5",
+          "b4c131f5-cd69-49a9-90b2-0f2a10a84787",
+          "960233a7-5323-423a-9eb4-deabdb5b3bf7"
+        ],
+        "relevant_context": [
+          "location, a nd context, and verifies it automatically before \nsending it through official channels. By keeping \ninformation tied to the physical world, AR CITIZEN aims \nto make civic reporting easier, clearer, and more \ntrustworthy for everyone . \nII. LITERATURE REVIEW \nSmart city complaint systems have attempted to modernize \ninfrastructure reporting yet most still depend on portals \nhelplines and map-based forms that separate users from the",
+          "location, a nd context, and verifies it automatically before \nsending it through official channels. By keeping \ninformation tied to the physical world, AR CITIZEN aims \nto make civic reporting easier, clearer, and more \ntrustworthy for everyone . \nII. LITERATURE REVIEW \nSmart city complaint systems have attempted to modernize \ninfrastructure reporting yet most still depend on portals \nhelplines and map-based forms that separate users from the",
+          "inside portals that break context. Instead of describing a \nbroken streetlight choosing a location from a map and \nwaiting for uncertain updates a citizen should be  able to \nview maintenance history open complaints and responsible \ndepartments directly through the phone camera while \nstanding at the site. AR CITIZEN follows this emerging \nmodel by placing verified civic information directly on \ninfrastructure guiding resi dents to capture accurate"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 0.5,
+          "comment": "unsupported_claims=['Because the system also overlays maintenance history, existing open complaints, and the departments responsible for a piece of infrastructure right in the user\u2019s view, city workers receive a complete, verifiable record for each incident.', 'This context\u2011rich, location\u2011anchored data lets analysts see patterns of repeated failures\u2014such as drainage blockages or wiring faults\u2014at specific sites, trace them back to the underlying cause, and prioritize corrective action.']"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly explains how AR-CITIZEN helps cities find root causes behind recurring failures by linking complaints to locations and providing contextual data."
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "input": "What happens to a submission that falls below the verification layer's certainty threshold?",
+      "output": {
+        "answer": "The provided context does not specify what happens to a submission that falls below the verification layer\u2019s certainty threshold.",
+        "retrieved_ids": [
+          "4d57c7c2-f2ee-4157-aa65-31892a1e7c42",
+          "83ce4ab3-a05e-4d2b-9a9d-c7b3f4e1689c",
+          "452e8f42-f797-4b96-aa0f-4bd89ab5e8d3"
+        ],
+        "relevant_context": [
+          "presence of visual evidence removes ambiguity and \nreduces the need for repeated clarification by service \npersonnel. The submission therefore becomes not only a \nrequest but a documented record that is easily reviewable. \nD. Verification Scoring and Duplicate Management  \nThe verification layer evaluates the submission for clarity \nand alignment with stored records. If many users capture \nthe same malfunctioning light or clogged drainage within",
+          "presence of visual evidence removes ambiguity and \nreduces the need for repeated clarification by service \npersonnel. The submission therefore becomes not only a \nrequest but a documented record that is easily reviewable. \nD. Verification Scoring and Duplicate Management  \nThe verification layer evaluates the submission for clarity \nand alignment with stored records. If many users capture \nthe same malfunctioning light or clogged drainage within",
+          "reduces the need for repeated clarification by service \npersonnel. The submission therefore becomes not only a \nrequest but a documented record that is easily reviewable. \nD. Verification Scoring and Duplicate Management  \nThe verification layer evaluates the submission for clarity \nand alignment with stored records. If many users capture \nthe same malfunctioning light or clogged drainage within \na place and time window, those reports are merged into"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by stating that the context does not specify what happens to submissions below the verification threshold."
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "input": "Why does AR-CITIZEN keep the AR label steady instead of letting it shake or drift?",
+      "output": {
+        "answer": "Because a drifting or shaky AR label breaks trust and distracts users.  \nThe system continuously corrects and smooths the map so the label stays firmly attached to the real\u2011world fixture, even when the user moves, the signal is weak, or there\u2019s glare or reflection. With a steady overlay, people feel that the information is part of the street rather than a floating screen, and they can focus on the issue at hand instead of worrying whether the AR tag is off.",
+        "retrieved_ids": [
+          "e6c5df65-0290-4b77-ac1b-fc6ac259d2cb",
+          "4b3e94e9-3264-4a67-a7c7-811996e27ade",
+          "f627bae2-e23f-4d83-a36d-eac93897d200"
+        ],
+        "relevant_context": [
+          "first-time users . \nB. Spatial Normalization and Stable AR Overlay  \nAfter capture, the system cleans the asset view so only the \ncorrect structure stays marked. Many city fixtures look \nalike, so it smooths location errors and keeps the label fixed \neven as the person moves. A steady label matters outdoors; \nif it shakes or dr ifts, people stop trusting it. The corrected \nmapping keeps the overlay aligned even with weak signals, \nmetal glare, or glass reflections. When the tag stays locked",
+          "to the real object, the information feels part of the street, not \nthe screen, and users are more willing to rely on it. With the \noverlay staying steady, people can pay attention to the \nactual problem instead of worrying whether the AR tag is \noff. This module doesn\u2019t just flag places that keep breaking. \nIt also shows when they fail again during certain seasons. \nWith that timing clear, maintenance teams can plan ahead \ninstead of waiting for the next complaint.",
+          "users are more willing to rely on it. With the overlay staying \nsteady, people can pay attention to the actual problem instead \nof worrying whether the AR tag is off . This module doesn\u2019t \njust flag places that keep breaking. It also shows when they \nfail again during certain seasons. With that timing clear,"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly explains why the AR label stays steady, citing trust, distraction, smoothing, and environmental challenges exactly as described in the context."
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "input": "How does the AR-based identification module recognize an asset when there's no readable label on it?",
+      "output": {
+        "answer": "The AR\u2011based identification system does not rely solely on printed text.  \nWhen a label is missing it falls back on the visual cues that the camera can still see:\n\n* The computer\u2011vision engine classifies the **asset type** (e.g., streetlight, pole, sign) from its shape, size, and surrounding context.  \n* It uses the **orientation and location** of the object relative to the device (and to known civic infrastructure) to narrow down the identity.  \n* Any other visible markers\u2014such as paint patterns, mounting hardware, or distinctive geometry\u2014are also used as confirmation.\n\nSo, in the absence of readable characters, the system depends on category detection, spatial context, and other visual features to recognize the asset.",
+        "retrieved_ids": [
+          "43d30d7e-8284-452e-a65d-ea9ee7c3309e",
+          "6a5e4a86-be27-4f2d-983f-1a800a809d39",
+          "26eb9fce-2d36-4e82-a18c-a3924215c836"
+        ],
+        "relevant_context": [
+          "civic records correspond to the correct physical location.  \nOnce the AR layer displays the asset, the computer vision \nsystem operates to detect the asset category and vis ible \nmarkers. If labels, pole numbers, or signs codes are present, \nthe OCR module extracts characters from the given inputs to \nconfirm identity. This strengthens accuracy especially in \ndense areas where identical assets line up along the same \nstreet. For example, if four streetlights stand within the same",
+          "ensuring that civic reporting remains precise and \naccountable . \nA. AR Based Identification and Visual Capture  \nThe system begins by interpreting the world through the \ncamera view. Device senses the orientation and location of the \nasset and extracts any readable labels on poles, electric plates, \nor sign boards. Optical text interpretation helps confirm asset \nidentity when multiple similar units are positioned closely. \nEven when printed text is missing, the direction of view and",
+          "ensuring that civic reporting remains precise and \naccountable . \nA. AR Based Identification and Visual Capture  \nThe system begins by interpreting the world through the \ncamera view. Device senses the orientation and location of the \nasset and extracts any readable labels on poles, electric plates, \nor sign boards. Optical text interpretation helps confirm asset \nidentity when multiple similar units are positioned closely. \nEven when printed text is missing, the direction of view and"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 0.5,
+          "comment": "unsupported_claims=['The computer\u2011vision engine classifies the asset type (e.g., streetlight, pole, sign) from its shape, size, and surrounding context.', 'Any other visible markers\u2014such as paint patterns, mounting hardware, or distinctive geometry\u2014are also used as confirmation.']"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly explains how the AR-based identification module recognizes an asset without a readable label, addressing the user's question fully."
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "input": "What checks does the verification pipeline apply to citizen-submitted complaints?",
+      "output": {
+        "answer": "The provided excerpt does not list the specific checks that the verification pipeline performs on citizen\u2011submitted complaints.",
+        "retrieved_ids": [
+          "ad577408-1ff9-446d-8425-8a5d4d700148",
+          "1ab49fe2-03c3-460e-bdf6-15fc7915eb88",
+          "bd865b00-a6e7-4b5c-b447-a997b60a74b5"
+        ],
+        "relevant_context": [
+          "map and waiting for uncertain updates a citizen should be \nable to view maintenance history open complaints and \nresponsible departments directly through the phone camera \nwhile standing at the site. AR CITIZEN follows this \nemerging model by placing verified civic information \ndirectly on infrastructure guiding residents to capture \naccurate evidence preventing duplicates and mak ing \nresolution progress visible in real space . \nIII.  PROPOSED SYSTEM",
+          "map and waiting for uncertain updates a citizen should be \nable to view maintenance history open complaints and \nresponsible departments directly through the phone camera \nwhile standing at the site. AR CITIZEN follows this \nemerging model by placing verified civic information \ndirectly on infrastructure guiding residents to capture \naccurate evidence preventing duplicates and mak ing \nresolution progress visible in real space . \nIII.  PROPOSED SYSTEM",
+          "location, a nd context, and verifies it automatically before \nsending it through official channels. By keeping \ninformation tied to the physical world, AR CITIZEN aims \nto make civic reporting easier, clearer, and more \ntrustworthy for everyone . \nII. LITERATURE REVIEW \nSmart city complaint systems have attempted to modernize \ninfrastructure reporting yet most still depend on portals \nhelplines and map-based forms that separate users from the"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by stating that the retrieved context does not specify the checks applied by the verification pipeline."
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "input": "What does Phase I of AR-CITIZEN target?",
+      "output": {
+        "answer": "I\u2019m sorry, but the provided context does not include information about what Phase\u202fI of AR\u2011CITIZEN targets.",
+        "retrieved_ids": [
+          "4cf23a66-b198-41f9-9948-fe5db0b39aea",
+          "07f1658c-c45c-48f7-92ad-5ae8c68523f0",
+          "7251d2c0-0926-4d1c-a426-e40ee8cab3d7"
+        ],
+        "relevant_context": [
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,",
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,",
+          "The workflow illustrated in Fig. 3 describes the end -to-\nend functioning of the AR -CITIZEN system, from user \ninteraction to the verification and explanation of \nsubmitted civic reports.  The process begins when the \nmobile application, on launching, activates the camera \nand obtains GPS coordinates along with heading \norientation to approximate the viewpoint of the user. This \nsensing stage enables the system to automatically detect the"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer correctly states that the context does not contain information about what Phase I of AR-CITIZEN targets, directly addressing the question."
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "input": "What backend does AR-CITIZEN use to manage assets, reports, and logs?",
+      "output": {
+        "answer": "The provided context does not specify which backend technology AR\u2011CITIZEN uses to manage assets, reports, and logs.",
+        "retrieved_ids": [
+          "4cf23a66-b198-41f9-9948-fe5db0b39aea",
+          "07f1658c-c45c-48f7-92ad-5ae8c68523f0",
+          "f44f5898-7d7e-4a7a-8617-b41431a59346"
+        ],
+        "relevant_context": [
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,",
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,",
+          "This careful visual grounding improves reliability and gives \ncitizens confidence that what they see in the interface \nmatches exactly what is in front of them. The AR interface \nthen communicates with the backend server through \nsecured APIs. The backend functions as the central \nprocessing unit that fetches stored civic metadata including \nasset ownership department, prior service actions, pending \ncomplaints, inspection records, contractor notes, and repair"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly addresses the question by stating that the backend technology is not specified in the provided context."
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "input": "Who are the authors of the AR-CITIZEN paper and what is their affiliation?",
+      "output": {
+        "answer": "The paper was authored by:\n\n- **Abhijeeth\u202fPandey**  \n- **Aavesh\u202fKhan**  \n- **Dr.\u202fSonia\u202fJenifer\u202fRayen**\n\nAll three authors are affiliated with the **Department of Computer Science and Engineering (Artificial Intelligence and Machine Learning), Sathyabama Institute of Science and Technology, Chennai, India**.",
+        "retrieved_ids": [
+          "a593969b-2ccb-4135-8663-563575abfd79",
+          "92eea572-0585-4f64-b694-64193cac9775",
+          "171a498c-b981-4ac5-99eb-492f234ba52b"
+        ],
+        "relevant_context": [
+          "1  \nAR-CITIZEN: AI-POWERED AR CIVIC          \nENGAGEMENT PLATFORM \n \nAbhijeeth Pandey Aavesh Khan    Sonia Jenifer Rayen  \nDepartment  of Computer  Science and \nEngineering (Artificial Intelligence and \nMachine Learning) , \n Sathyabama  Institute of Science \nand Technology,  \nChennai,  India \nDepartment  of Computer  Science and \nEngineering (Artificial Intelligence and \nMachine Learning) , \nSathyabama  Institute of Science and \nTechnology,  \nChennai,  India \nDepartment of Computer  Science and",
+          "1  \nAR-CITIZEN: AI-POWERED AR CIVIC          \nENGAGEMENT PLATFORM \n \nAbhijeeth Pandey Aavesh Khan Dr. Sonia Jenifer Rayen  \nStudent, Department  of Computer Science \nand Engineering  \nwith specialization  in Artificial \nIntelligence and Machine Learning , \nSathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nStudent, Department  of Computer  Science \nand Engineering  \nwith specialization  in Artificial \nIntelligence and Machine Learning, \nSathyabama  Institute of Science  and",
+          "1  \nAR-CITIZEN: AI-POWERED AR CIVIC          \nENGAGEMENT PLATFORM \n \nAbhijeeth Pandey Aavesh Khan Dr. Sonia Jenifer Rayen  \nStudent, Department  of Computer Science \nand Engineering  \nwith specialization  in Artificial \nIntelligence and Machine Learning , \nSathyabama  Institute of Science  and \nTechnology,  \nChennai,  India \nStudent, Department  of Computer  Science \nand Engineering  \nwith specialization  in Artificial \nIntelligence and Machine Learning, \nSathyabama  Institute of Science  and"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.5,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.3333333333333333,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly lists the authors and their affiliation exactly as stated in the retrieved context."
+        }
+      ]
+    },
+    {
+      "id": "q01",
+      "input": "What is AR-CITIZEN?",
+      "output": {
+        "answer": "**AR\u2011CITIZEN** is an augmented\u2011reality civic interface that turns a smartphone camera into a real\u2011time \u201cpublic information lens.\u201d By pointing the camera at municipal assets\u2014such as streetlights, pavement, bus stops, park seating, or signage\u2014users receive accurate, context\u2011bound maintenance details directly in their view and can report issues through a unified AR interface.",
+        "retrieved_ids": [
+          "b2836f1e-8418-4475-8d0f-33de85ff33a2",
+          "f5250e80-b528-4368-9e8f-389e8c0fa61f",
+          "4cf23a66-b198-41f9-9948-fe5db0b39aea"
+        ],
+        "relevant_context": [
+          "III.  PROPOSED SYSTEM \n \nThe proposed system introduces AR CITIZEN, an \naugmented reality civic interface that transforms the \nsmartphone into a real time public information lens. Citizens \nno longer need to rely on detached reporting platforms or \nmanual complaint forms. Instead, by simply pointing the \ncamera at a public asset such as a streetlight, damaged \npavement, bus stop, park seating, or signage post, the user \nreceives accurate and context bound maintenance details in",
+          "III.  PROPOSED SYSTEM \n \nThe proposed system introduces AR CITIZEN, an \naugmented reality civic interface that transforms the \nsmartphone into a real time public information lens. Citizens \nno longer need to rely on detached reporting platforms or \nmanual complaint forms. Instead, by simply pointing the \ncamera at a public asset such as a streetlight, damaged \npavement, bus stop, park seating, or signage post, the user \nreceives accurate and context bound maintenance details in",
+          "IV.  SYSTEM DESIGN \nThe proposed AR CITIZEN system presents a location \naware, AR based civic information and reporting platform \nthat brings municipal asset details directly into the user\u2019s \ncamera view. Instead of searching through portals, \nhelplines, or disconnected complaint forms, citizens receive \nclear on-site information and seamless reporting through a \nunified AR interface. Each component in the system works \nin sequence so that asset recognition, issue reporting,"
+        ],
+        "relevant_chunk_count": 3
+      },
+      "evaluations": [
+        {
+          "name": "precision_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "recall_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "mrr_at_3",
+          "value": 0.0,
+          "comment": null
+        },
+        {
+          "name": "faithfulness",
+          "value": 1.0,
+          "comment": "fully supported"
+        },
+        {
+          "name": "relevance",
+          "value": 1.0,
+          "comment": "The answer directly and completely explains what AR-CITIZEN is using only information present in the retrieved context."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,344 @@
+[
+  {
+    "id": "q01",
+    "query": "What is AR-CITIZEN?",
+    "expected_answer": "An AI-driven augmented-reality platform that uses a smartphone camera, geolocation, compass data, lightweight vision, and OCR to identify civic assets and display AR tags showing departments, service history, issues, and nearby reports.",
+    "expected_chunk_ids": ["4fe19e34-01df-4b01-8936-ab9fae979a3a"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": "Abstract sentence, page 1."
+  },
+  {
+    "id": "q02",
+    "query": "Who are the authors of the AR-CITIZEN paper and what is their affiliation?",
+    "expected_answer": "Abhijeeth Pandey, Aavesh Khan, and Dr. Sonia Jenifer Rayen, all from the Department of Computer Science and Engineering (AI & ML specialization) at Sathyabama Institute of Science and Technology, Chennai, India. Dr. Sonia Jenifer Rayen is listed as Associate Professor; the other two as students.",
+    "expected_chunk_ids": ["171a498c-b981-4ac5-99eb-492f234ba52b", "dbb46c45-669d-42e6-b414-50fca67edda8"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": "Answer spans two chunks (title/first two authors, then third author + emails). This version gives the third author the title 'Dr.' and role 'Associate Professor' — contrast with q21."
+  },
+  {
+    "id": "q03",
+    "query": "What backend does AR-CITIZEN use to manage assets, reports, and logs?",
+    "expected_answer": "A serverless Firebase backend, with an admin console that supports triage and closure.",
+    "expected_chunk_ids": ["2529a231-ec95-4ccc-b377-78271018f6ed"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": ""
+  },
+  {
+    "id": "q04",
+    "query": "What does Phase I of AR-CITIZEN target?",
+    "expected_answer": "An Android MVP for streetlights, potholes, and parks in a pilot zone.",
+    "expected_chunk_ids": ["2529a231-ec95-4ccc-b377-78271018f6ed"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": "Same chunk as q03; both facts sit in the same 500-char chunk."
+  },
+  {
+    "id": "q05",
+    "query": "What checks does the verification pipeline apply to citizen-submitted complaints?",
+    "expected_answer": "GPS checks, media analysis, duplicate clustering, crowd confirmation, and optional moderation, to assign confidence and status.",
+    "expected_chunk_ids": ["2529a231-ec95-4ccc-b377-78271018f6ed"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": ""
+  },
+  {
+    "id": "q06",
+    "query": "How does the AR-based identification module recognize an asset when there's no readable label on it?",
+    "expected_answer": "Even when printed text is missing, the direction of view and spatial direction allow the system to isolate the correct object.",
+    "expected_chunk_ids": ["e0b22140-99a8-45c1-b50a-9d0012797a07"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "Section III.A."
+  },
+  {
+    "id": "q07",
+    "query": "Why does AR-CITIZEN keep the AR label steady instead of letting it shake or drift?",
+    "expected_answer": "A steady label matters outdoors — if it shakes or drifts, people stop trusting it. The corrected mapping keeps the overlay aligned even with weak signals, metal glare, or glass reflections.",
+    "expected_chunk_ids": ["d5cc0885-a85a-4efa-906c-3123492952f8"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "Section III.B, Spatial Normalization and Stable AR Overlay."
+  },
+  {
+    "id": "q08",
+    "query": "What happens to a submission that falls below the verification layer's certainty threshold?",
+    "expected_answer": "It can be scheduled for inspection rather than being forwarded directly.",
+    "expected_chunk_ids": ["63caf84d-706d-45a4-afb6-e73d1d676e3d"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "Section III.D, Verification Scoring and Duplicate Management."
+  },
+  {
+    "id": "q09",
+    "query": "How does AR-CITIZEN help cities find the root cause behind recurring failures like drainage or wiring issues?",
+    "expected_answer": "By tracking patterns over months, the data points to real causes such as bad wiring groups, drainage that doesn't hold up, or crowded walkways, which helps with budgeting and lets engineers redesign weak zones.",
+    "expected_chunk_ids": ["2092e7c3-a2eb-4531-b439-23215dd0b31f"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "Section III.G, Pattern Observation and Urban Planning Support."
+  },
+  {
+    "id": "q10",
+    "query": "What example questions does the paper give for the Generative AI explanation layer?",
+    "expected_answer": "\"Why is this streetlight still not fixed?\" and \"Who is responsible for this road stretch?\"",
+    "expected_chunk_ids": ["d4022e08-57df-4b74-9112-069415e8a6cb"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "hard",
+    "notes": "Tests exact-quote retrieval; quote marks were mangled to a mojibake character by the PDF text layer, which may affect exact-match scoring."
+  },
+  {
+    "id": "q11",
+    "query": "What does cloud anchor support enable for fixed public assets?",
+    "expected_answer": "Spatial persistence — when a location is revisited, the AR overlay appears without recalibration or re-detection.",
+    "expected_chunk_ids": ["8f9c6e01-b6f7-4670-b46b-4b3193a67f73"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": ""
+  },
+  {
+    "id": "q12",
+    "query": "By how much did asset detection accuracy improve according to the Results section?",
+    "expected_answer": "From 48% to 89%.",
+    "expected_chunk_ids": ["def28edb-85aa-4168-b3a7-bc9b0daeeb51"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": "This exact version's Results section (VI) reports real measured numbers, unlike the other uploaded near-duplicate document (ICICNS2026_PaperID539_AR_CITIZEN.pdf), which only reports 'expected' results with no numbers — see q32."
+  },
+  {
+    "id": "q13",
+    "query": "What was the improvement in duplicate-report grouping accuracy?",
+    "expected_answer": "From 32% to 78%.",
+    "expected_chunk_ids": ["1f256189-2873-4b00-9b49-6a9cca87e1c0"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": ""
+  },
+  {
+    "id": "q14",
+    "query": "How much did approval/verification speed improve, and why?",
+    "expected_answer": "From 40% to 81%, because each ticket arrives with location, photos, timestamps, and asset numbers from the start, so nothing is missing.",
+    "expected_chunk_ids": ["1f256189-2873-4b00-9b49-6a9cca87e1c0"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "Same chunk as q13; two distinct metrics in one 500-char chunk."
+  },
+  {
+    "id": "q15",
+    "query": "What were the reported improvements in citizen confidence and progress visibility?",
+    "expected_answer": "Confidence rose from 35% to 87%, and progress visibility improved from 29% to 76%.",
+    "expected_chunk_ids": ["32baae83-9aa1-4c4d-bf6d-e5ab03743d54"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "This chunk also contains the 46%->84% record-accuracy figure."
+  },
+  {
+    "id": "q16",
+    "query": "What is the performance data in the Results section based on?",
+    "expected_answer": "A pilot dataset of municipal assets within a designated test ward during live AR reporting trials.",
+    "expected_chunk_ids": ["d75ebcf8-4664-4463-9faf-43d8ea93ea8c"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "hard",
+    "notes": "Tests whether the model correctly scopes the results to a pilot/test-ward dataset rather than presenting them as full production numbers."
+  },
+  {
+    "id": "q17",
+    "query": "What predictive capability does the Future Scope section propose adding?",
+    "expected_answer": "Predictive maintenance using machine learning models to anticipate asset failure and reduce repair delays and budgeting stress.",
+    "expected_chunk_ids": ["611ca596-9e6b-4d2a-ab33-8b569a6a3ef5"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "medium",
+    "notes": "Section VII, Future Scope of the Project."
+  },
+  {
+    "id": "q18",
+    "query": "According to the conclusion, what can a citizen do with their smartphone using AR-CITIZEN?",
+    "expected_answer": "Point it at a road, streetlight, park element, or signpost to view accurate information presented in place, in real time.",
+    "expected_chunk_ids": ["0ef81933-bd98-45aa-9ef2-793b7dbe6153", "5b80e78d-fe4a-4a26-b9c0-6b7780d3a3c4"],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "easy",
+    "notes": "Answer spans two chunks straddling the Future Scope / Conclusion boundary."
+  },
+  {
+    "id": "q19",
+    "query": "What programming language or framework is used to implement AR-CITIZEN's backend server code?",
+    "expected_answer": "Not stated in the paper. It names Firebase as the serverless backend but never specifies an implementation language or framework.",
+    "expected_chunk_ids": [],
+    "source_document": "AR_CITIZEN_Paper.pdf",
+    "difficulty": "hard",
+    "notes": "Trap question: tests SIMILARITY_THRESHOLD / NO_CONTEXT_ANSWER fallback in generate.py. Correct behavior is either a clear 'not specified' answer grounded in nearby chunks, or the fixed no-context response — not a fabricated language."
+  },
+  {
+    "id": "q20",
+    "query": "What is Section VI titled in the ICICNS2026 submission, and what is different about it compared to the other uploaded AR-CITIZEN paper?",
+    "expected_answer": "\"Expected Results and Discussions\" — unlike the other uploaded version of this paper (AR_CITIZEN_Paper.pdf), which titles the equivalent section just \"Results and Discussions\" and reports concrete measured percentages, this submission version reports no numbers at all.",
+    "expected_chunk_ids": ["016f2b31-7038-4885-8852-f5d914af496a"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": "Version-distinguishing question; see q32 for the deeper follow-up."
+  },
+  {
+    "id": "q21",
+    "query": "In the ICICNS2026 submission, what title is given to Sonia Jenifer Rayen?",
+    "expected_answer": "No title or honorific — she is listed simply as \"Sonia Jenifer Rayen\" with no \"Dr.\" and no role given, unlike the other uploaded version of the paper, which lists her as \"Dr. Sonia Jenifer Rayen, Associate Professor.\"",
+    "expected_chunk_ids": ["a593969b-2ccb-4135-8663-563575abfd79"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Near-duplicate-document disambiguation: both papers are in the same vector store with no doc_id scoping on /stream, so this specifically tests whether retrieval pulls the right version's author block rather than blending it with q02's answer."
+  },
+  {
+    "id": "q22",
+    "query": "What examples of contemporary urban public infrastructure does the ICICNS2026 introduction list?",
+    "expected_answer": "Road networks, lighting, green spaces, transportation shelters, and public buildings.",
+    "expected_chunk_ids": ["b4759489-81de-4672-82ff-d15483dfdd1d"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "easy",
+    "notes": "Same chunk also contains the 'Index Terms' list (see q23)."
+  },
+  {
+    "id": "q23",
+    "query": "What is the keyword list at the top of the ICICNS2026 submission labeled?",
+    "expected_answer": "\"Index Terms\" — not \"Keywords\" (the label the other uploaded version of the paper uses for the same list).",
+    "expected_chunk_ids": ["b4759489-81de-4672-82ff-d15483dfdd1d"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Fine-grained wording difference between the two near-duplicate uploaded documents."
+  },
+  {
+    "id": "q24",
+    "query": "According to the ICICNS2026 introduction, what recent technological developments create the opportunity to close the gap between citizens and urban infrastructure?",
+    "expected_answer": "Recent developments in augmented reality (AR) technology, computer vision, and geospatial sensing capabilities.",
+    "expected_chunk_ids": ["c4009ee6-6647-4791-b4ec-e9f960faff6d"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": ""
+  },
+  {
+    "id": "q25",
+    "query": "What four topics does the Literature Review section of the ICICNS2026 paper say it reviews?",
+    "expected_answer": "AR-based civic interaction systems, OCR-enabled infrastructure identification, crowdsourced civic reporting platforms, and retrieval-augmented AI explanations for public service transparency.",
+    "expected_chunk_ids": ["2ead6fb3-1105-4051-984a-4295efe62742"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": "This framing sentence is unique to this version — the other uploaded document's literature review starts directly with 'Smart city complaint systems have attempted...' with no such summary sentence."
+  },
+  {
+    "id": "q26",
+    "query": "What does the AR Based Identification and Visual Capture module extract from poles, electric plates, or sign boards?",
+    "expected_answer": "Any readable labels, using optical text interpretation to help confirm asset identity when multiple similar units are positioned closely.",
+    "expected_chunk_ids": ["9bd8582e-957d-45a7-8d19-f884b5d790ba"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "easy",
+    "notes": ""
+  },
+  {
+    "id": "q27",
+    "query": "What five elements make up the Conceptual Interaction Loop shown in Fig. 1 of the ICICNS2026 submission?",
+    "expected_answer": "Physical civic assets, AR visualization, citizen interaction, civic data services, and AI-driven explanations, forming a continuous transparent reporting cycle.",
+    "expected_chunk_ids": ["986d2ac0-770f-4f36-838e-2828c1201948", "bd1ec322-f8d0-4725-bb89-a8653258a928"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Fig. 1 ('Conceptual Interaction Loop') exists only in this version of the paper; the other uploaded version has no equivalent figure at this point in the text. Good test of whether retrieval confuses the two documents' figures."
+  },
+  {
+    "id": "q28",
+    "query": "What are the box labels drawn inside the Fig. 2 System Architecture diagram (e.g. its layer names)?",
+    "expected_answer": "Cannot be answered from the ingested text. PyPDFLoader/pypdf extracts only the figure's caption and the surrounding explanatory paragraph, not text drawn inside the diagram image itself — there is no OCR step in this app's ingestion pipeline, so the diagram's internal layer/box labels are invisible to retrieval for both uploaded AR-CITIZEN documents.",
+    "expected_chunk_ids": [],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Real, unaddressed limitation, not specific to this document: verified by checking that none of this document's or AR_CITIZEN_Paper.pdf's ingested chunks contain any diagram box-label text (e.g. 'Client/Edge Layer', 'Layer 1', 'Start & Locate'). Expect either a paragraph-based non-answer or NO_CONTEXT_ANSWER."
+  },
+  {
+    "id": "q29",
+    "query": "What is the name given to the AI explanation component in the ICICNS2026 System Design section?",
+    "expected_answer": "The \"Retrieval-Augmented LLM Explanation Module.\"",
+    "expected_chunk_ids": ["7c85c2b5-0ed0-4e7e-9c0a-16ef37f737e6"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": "The other uploaded version of this paper instead calls this component 'Generative AI' integrated to support the explanation layer — version-distinguishing naming difference."
+  },
+  {
+    "id": "q30",
+    "query": "What does the AR-CITIZEN mobile app do immediately on launching, per the Workflow section?",
+    "expected_answer": "It activates the camera and obtains GPS coordinates along with heading orientation, to approximate the user's viewpoint.",
+    "expected_chunk_ids": ["7251d2c0-0926-4d1c-a426-e40ee8cab3d7"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "easy",
+    "notes": "Section IV.B, Workflow (Fig. 3)."
+  },
+  {
+    "id": "q31",
+    "query": "What three checks does the verification process apply to a submitted report, according to the Workflow section?",
+    "expected_answer": "It checks whether the report is a duplicate, checks image quality, and validates GPS consistency, to assign a confidence score.",
+    "expected_chunk_ids": ["95fa92df-7d2b-44a4-bf55-3fac470008a9"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": ""
+  },
+  {
+    "id": "q32",
+    "query": "According to the Comparison with Existing System section, what three things does a traditional civic reporting system ask a user to do manually?",
+    "expected_answer": "Describe the problem manually, select a department, and type the location.",
+    "expected_chunk_ids": ["420c4743-1e52-4cbe-857b-25ed384eeec8"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "easy",
+    "notes": ""
+  },
+  {
+    "id": "q33",
+    "query": "Does the ICICNS2026 submission report quantitative performance numbers (e.g. percentage improvements) for AR-CITIZEN?",
+    "expected_answer": "No. This version states the system is only conceptually designed and that quantitative validation will be conducted in future prototype deployments — it reports no measured percentages, unlike the separately uploaded AR_CITIZEN_Paper.pdf, which gives specific before/after percentages (e.g. asset detection 48% to 89%).",
+    "expected_chunk_ids": ["79f8f4e6-424c-4e67-9e72-a317f0c22057"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Critical version-distinguishing test. With no doc_id filtering on /stream, k=3 retrieval draws from the whole vector store (both AR-CITIZEN documents plus an unrelated resume and another publication also in this Neon DB), so a wrong answer here — one that quotes the other document's percentages as if this one reported them — is a real, plausible failure mode worth watching for."
+  },
+  {
+    "id": "q34",
+    "query": "What key limitation does the ICICNS2026 paper's conclusion admit about AR-CITIZEN?",
+    "expected_answer": "It has not been implemented on a large scale in the real world — the system is still in the design prototype phase.",
+    "expected_chunk_ids": ["a66c20a6-a332-41a6-8828-2157e8014d04", "92141ae3-e81f-443e-8377-e7629925c600"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": "Answer spans two chunks."
+  },
+  {
+    "id": "q35",
+    "query": "What will future work focus on, according to the conclusion?",
+    "expected_answer": "Building a functional mobile prototype, evaluating the system through controlled user studies, and analyzing reporting accuracy, latency, and trust improvements in various urban settings.",
+    "expected_chunk_ids": ["92141ae3-e81f-443e-8377-e7629925c600"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "medium",
+    "notes": ""
+  },
+  {
+    "id": "q36",
+    "query": "Which reference number does the ICICNS2026 paper cite for \"RAG Models for Civic Data Summarization\"?",
+    "expected_answer": "Reference [16] (F. Silva and C. Montes, Proc. ACM Intelligent User Interfaces, pp. 199-210, 2021).",
+    "expected_chunk_ids": ["e35996a7-7308-4188-854a-d83ac937910a"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Tests retrieval over the References section, a chunk type with very different structure/density from the body text."
+  },
+  {
+    "id": "q37",
+    "query": "How many participants or what sample size were involved in the AR-CITIZEN user study?",
+    "expected_answer": "Not stated. No user study has been run yet — the paper explicitly says controlled user studies and quantitative validation are future work, not a completed evaluation.",
+    "expected_chunk_ids": [],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "hard",
+    "notes": "Trap question testing NO_CONTEXT_ANSWER / SIMILARITY_THRESHOLD; also checks the model doesn't hallucinate a sample size by borrowing a number from the other uploaded (results-bearing) version of the paper."
+  },
+  {
+    "id": "q38",
+    "query": "In the ICICNS2026 abstract, what does AR-CITIZEN's retrieval-augmented LLM do?",
+    "expected_answer": "It answers queries using grounded data from a curated civic datastore.",
+    "expected_chunk_ids": ["953ee495-d953-4fcb-a143-b38caaa926d8"],
+    "source_document": "ICICNS2026_PaperID539_AR_CITIZEN.pdf",
+    "difficulty": "easy",
+    "notes": ""
+  }
+]

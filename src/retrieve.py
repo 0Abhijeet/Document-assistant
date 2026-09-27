@@ -35,6 +35,7 @@ async def retrieve_relevant_chunks(query: str, k: int = 3, doc_id: str | None = 
         rows = result.all()
         return [
             {
+                "id": str(chunk.id),
                 "content": chunk.content,
                 "page": chunk.page_number,
                 "document_id": str(chunk.document_id),
