@@ -395,3 +395,26 @@ Billing was confirmed by the owner ("under the free $200") before the call; the 
 
 ### Live call attempt 2 (success)
 After the owner replaced the key and endpoint with those of resource `...-4286-resource` (the one holding the `gpt-4.1-mini` deployment), the same call succeeded: HTTP 200, a correct one-line answer, `query_logs` row written. Confirms the attempt-1 diagnosis: the 401 was a key/endpoint-from-the-wrong-resource mismatch, not a code problem. Root cause of the earlier failure was configuration, so nothing in `src/azure_foundry.py` changed between the two attempts.
+
+## 17. Second OOM crash on upload: fastembed's default batch size (September 2026)
+
+### Symptom
+Render's event log showed `Ran out of memory (used over 512MB)` on every document upload, after §11's torch→fastembed swap had already fixed the *first* OOM crash loop. This is a distinct bug: it happens inside fastembed itself, not because torch got reintroduced (`requirements.txt` was checked — no torch, no sentence-transformers).
+
+### Diagnosis (measured, not assumed)
+`ingest.py::_FastEmbedWrapper.embed_documents()` called `TextEmbedding.embed(texts)` with no `batch_size`, which defaults to 256 — every chunk of an uploaded PDF gets padded to the longest sequence in the batch and run through the ONNX model in one forward pass. Memory scales with `batch_size * seq_len^2` (attention), so peak memory grows with document size, not just with the model's own footprint.
+Reproduced locally, real venv, real 387KB sample PDF (71 chunks), measured with `psutil` (RSS):
+- Model loaded, before embedding: ~223MB
+- After `embed_documents()` at the default `batch_size=256` (i.e. all 71 chunks in one batch): ~669MB
+- After `embed_documents()` at `batch_size=8`: ~283MB
+Ruled out first, both measured and found to make no difference: onnxruntime thread count (`threads=1` vs default), and the CPU memory arena (`enable_cpu_mem_arena=False` + `arena_extend_strategy=kSameAsRequested`). The batch size of the single `.embed()` call is the actual lever.
+
+### Fix
+`embed_documents()` now passes an explicit `batch_size` (env-overridable `EMBED_BATCH_SIZE`, default 8) into fastembed's `.embed()`. `embed_query()` is untouched — it always embeds exactly one string, so batch size doesn't apply.
+
+### Real bugs found and fixed (verified, not assumed)
+Confirmed batch_size has no effect on the embedding values themselves: embedding the same 20 texts at `batch_size=256` and `batch_size=8` produced bit-identical vectors (max abs diff `0.0`). So the fix only bounds peak memory; retrieval quality is unaffected.
+
+### Verification status
+- **Verified:** the memory measurement above, and the batch-size-invariance of embedding output, both against the real fastembed model in this project's venv.
+- **Not verified:** the real pytest suite against this change (Docker Desktop was not running at fix time). No live upload against the hosted Render instance has been done since the fix — the Render OOM is not yet confirmed gone in production, only strongly diagnosed and fixed locally.

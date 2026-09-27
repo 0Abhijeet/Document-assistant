@@ -8,6 +8,7 @@ A full-stack Retrieval-Augmented Generation system: upload a PDF, ask questions,
 - Fixed a real concurrency bug — blocking I/O inside async routes — and can explain why it mattered
 - Converted the pipeline to fully async (SQLAlchemy/asyncpg, async Groq client), including diagnosing and fixing a real event-loop-blocking regression risk and a testing-framework/event-loop incompatibility along the way
 - Diagnosed and fixed a production memory-limit crash by swapping a torch-based embedding library for a lightweight ONNX-based one, with zero change to the database schema
+- Diagnosed a second, distinct out-of-memory crash on upload — traced it to the embedding library's own default batch size rather than the earlier torch dependency, measured peak memory before/after with a real embedding run, and confirmed the fix doesn't change the embedding output (see PROJECT_DETAILS.md §17). Fix verified locally; not yet confirmed against the live Render deploy
 - Wrote a test suite that runs against a real Postgres instance (not mocked), covering ingestion, retrieval, and API endpoints
 - Set up CI (GitHub Actions) that spins up a fresh database and runs the full suite on every push
 - Deployed to production (Render + Neon), debugging real infrastructure issues along the way: stale local environments, deprecated model names, environment variable scoping, and out-of-memory crash loops
