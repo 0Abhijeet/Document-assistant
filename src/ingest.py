@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -6,6 +7,16 @@ from fastembed import TextEmbedding
 
 from src.database import AsyncSessionLocal
 from src.models import Document, Chunk
+
+# fastembed's TextEmbedding.embed() defaults to batch_size=256, i.e. every
+# chunk of an uploaded PDF gets padded to the longest sequence and run through
+# the ONNX model in a single forward pass. Memory scales with
+# batch_size * seq_len^2 (attention), so on a 512MB host (Render) this OOM's
+# on any PDF producing more than a couple dozen chunks -- measured: a 71-chunk
+# PDF took RSS from ~223MB (model loaded) to ~669MB at batch_size=256, vs
+# ~283MB at batch_size=8. Bounding it here keeps peak memory roughly constant
+# regardless of document size.
+EMBED_BATCH_SIZE = int(os.environ.get("EMBED_BATCH_SIZE", "8"))
 
 
 class _FastEmbedWrapper:
@@ -16,7 +27,7 @@ class _FastEmbedWrapper:
         self._model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
 
     def embed_documents(self, texts):
-        return [vec.tolist() for vec in self._model.embed(texts)]
+        return [vec.tolist() for vec in self._model.embed(texts, batch_size=EMBED_BATCH_SIZE)]
 
     def embed_query(self, text):
         return next(iter(self._model.embed([text]))).tolist()
