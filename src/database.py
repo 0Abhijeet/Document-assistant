@@ -70,11 +70,26 @@ engine = create_async_engine(ASYNC_DATABASE_URL, pool_pre_ping=True, connect_arg
 IVFFLAT_PROBES = int(os.environ.get("IVFFLAT_PROBES", "10"))
 
 
+async def _try_set_ivfflat_probes(asyncpg_conn):
+    try:
+        await asyncpg_conn.execute(f"SET ivfflat.probes = {IVFFLAT_PROBES}")
+    except Exception:
+        # `ivfflat.probes` is a GUC the `vector` extension defines -- on a
+        # brand-new database where `CREATE EXTENSION vector` hasn't run yet,
+        # this connection is the one about to run it (tests/conftest.py's
+        # clean_db fixture does exactly this via this same engine). Failing
+        # here would raise out of the "connect" event and break that very
+        # first connection -- verified: this is what broke CI (a fresh
+        # pgvector/pgvector:pg16 container, no migration run, extension
+        # created by the test fixture itself). Silently skip; the fixture's
+        # own CREATE EXTENSION runs right after, and every later connection
+        # in the pool succeeds once the extension exists.
+        pass
+
+
 @event.listens_for(engine.sync_engine, "connect")
 def _set_ivfflat_probes(dbapi_connection, connection_record):
-    dbapi_connection.run_async(
-        lambda asyncpg_conn: asyncpg_conn.execute(f"SET ivfflat.probes = {IVFFLAT_PROBES}")
-    )
+    dbapi_connection.run_async(_try_set_ivfflat_probes)
 
 # expire_on_commit=False: with a sync Session, accessing an attribute after
 # commit() triggers an implicit lazy-load (a blocking DB round trip) to
